@@ -82,3 +82,73 @@ sample_index = data["sample_index"]
 ```
 
 SVR、Linear Regression 等模型如果需要标准化，请只在 `X_train` 上拟合 scaler，然后再 transform `X_val` 和 `X_test`，不要用验证集或测试集参与 scaler 拟合。
+
+## 标准化数据集（`_scaled` 后缀）
+
+为了避免每个模型重复写标准化代码，已经预先生成了标准化后的数据，文件命名规则：在原始文件名中的后缀前插入 `_scaled`。
+
+默认 12 个月窗口的标准化文件：
+
+| 文件 | 说明 |
+| --- | --- |
+| `X_train_scaled.npy` | 标准化训练集特征（z-score） |
+| `y_train_scaled.npy` | 标准化训练集标签 |
+| `X_val_scaled.npy` | 标准化验证集特征 |
+| `y_val_scaled.npy` | 标准化验证集标签 |
+| `X_test_scaled.npy` | 标准化测试集特征 |
+| `y_test_scaled.npy` | 标准化测试集标签 |
+| `scaler_params_scaled.json` | 标准化器参数（供逆变换和复现） |
+
+多窗口版本同样可用：`_scaled_ws6`、`_scaled_ws12`、`_scaled_ws24`。
+
+### 标准化方法
+
+使用 **StandardScaler（z-score 标准化）**：
+
+$$X_{scaled} = \frac{X - \mu_{train}}{\sigma_{train}}$$
+
+其中 $\mu_{train}$ 和 $\sigma_{train}$ 只在训练集上计算，验证集和测试集使用相同的参数 transform。
+
+### 关键原则
+
+- **只用训练集拟合标准化器**：验证集和测试集不参与参数计算，避免数据泄漏
+- **不覆盖原始数据**：原始 `.npy` 文件保留不变，标准化版本另存
+- **参数可复现**：`scaler_params_scaled.json` 中记录了 X_mean、X_std、y_mean、y_std，预测时可用 `inverse_transform_y()` 还原到原始 CPI 尺度
+
+### 推荐读取方式
+
+```python
+from src.data_utils import load_scaled_dataset, inverse_transform_y
+
+# 加载标准化数据
+data = load_scaled_dataset(DATA_PROCESSED_DIR)
+X_train = data["X_train"]  # 标准化后的数据
+y_train = data["y_train"]
+scaler = data["scaler_params"]
+
+# 模型训练...
+# y_pred_scaled = model.predict(X_test)
+
+# 预测值还原为原始 CPI 尺度
+y_pred = inverse_transform_y(y_pred_scaled, scaler)
+```
+
+### 示例：scaler_params_scaled.json 内容
+
+```json
+{
+  "scaler_type": "standard",
+  "X_mean": 102.2127,
+  "X_std": 2.0732,
+  "y_mean": 102.2642,
+  "y_std": 2.0468
+}
+```
+
+### 生成标准化数据
+
+如果原始数据有更新，重新运行：
+
+```bash
+python -m src.create_scaled_datasets
+```
