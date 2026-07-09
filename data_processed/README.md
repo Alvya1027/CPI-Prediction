@@ -152,3 +152,57 @@ y_pred = inverse_transform_y(y_pred_scaled, scaler)
 ```bash
 python -m src.create_scaled_datasets
 ```
+
+## 同比 / 环比一维数据集
+
+为了满足 Naive、Auto-Regression 等简单 baseline 的需求，额外生成了按月份分组的一维数据。所有数据均为 1D 数组，按时间顺序切分训练集/验证集/测试集（70%/15%/15%）。
+
+### 同比数据（`cpi_m01` ~ `cpi_m12`）
+
+每个文件包含该月份所有年份的 CPI 值，按时间顺序排列。每组 3 个文件：
+
+| 文件 | 说明 | 点数 |
+|------|------|:---:|
+| `cpi_m01_train.npy` | 1月训练集 | 18 |
+| `cpi_m01_val.npy` | 1月验证集 | 4 |
+| `cpi_m01_test.npy` | 1月测试集 | 5 |
+| … | 2月~12月同理 | … |
+| `cpi_m12_train.npy` | 12月训练集 | 18 |
+| `cpi_m12_val.npy` | 12月验证集 | 3 |
+| `cpi_m12_test.npy` | 12月测试集 | 5 |
+
+标准化版本：文件名插入 `_scaled`（如 `cpi_m01_train_scaled.npy`），标准化参数独立保存为 `scaler_params_m01.json`。每个月份独立拟合 scaler，因为不同月份 CPI 的分布特征不同。
+
+### 环比数据（`cpi_seq`）
+
+所有 CPI 按时间顺序排成一维序列：
+
+| 文件 | 说明 | 点数 |
+|------|------|:---:|
+| `cpi_seq_train.npy` | 训练集 | 221 |
+| `cpi_seq_val.npy` | 验证集 | 47 |
+| `cpi_seq_test.npy` | 测试集 | 48 |
+
+同样有 `_scaled` 标准化版本和 `scaler_params_seq.json`。
+
+### 推荐读取方式
+
+```python
+import numpy as np
+
+# 同比：读取 1 月数据
+train = np.load("data_processed/cpi_m01_train.npy")
+val = np.load("data_processed/cpi_m01_val.npy")
+test = np.load("data_processed/cpi_m01_test.npy")
+
+# 环比：读取全序列
+train = np.load("data_processed/cpi_seq_train.npy")
+val = np.load("data_processed/cpi_seq_val.npy")
+test = np.load("data_processed/cpi_seq_test.npy")
+```
+
+### 生成数据
+
+```bash
+python -m src.create_monthly_datasets
+```
