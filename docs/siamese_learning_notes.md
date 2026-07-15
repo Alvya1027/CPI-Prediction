@@ -158,7 +158,82 @@ def compute_segment_features(segment):
 
 ---
 
-## 5. 参考文献
+> 更新：根据 7 月 14 日讨论，本项目孪生网络第一版改为**回归任务**：预测两个 CPI 窗口下一个月 CPI 的差值 $\Delta CPI_{ij} = y_i - y_j$，再用已知 $y_j$ 还原目标值 $\widehat{y_i} = y_j + \widehat{\Delta CPI_{ij}}$。下面的对比学习内容保留作为背景知识，但实际实现采用孪生回归方案。
+
+---
+
+## 5. 孪生回归样本对构造（当前方案）
+
+### 5.1 任务定义
+
+为孪生网络构造样本对 $(x_i, x_j)$：
+
+- $x_i$：目标窗口，例如 2024-01 ~ 2024-12，对应下一个月 CPI $y_i$（2025-01）
+- $x_j$：参考窗口，例如 2022-01 ~ 2022-12，对应下一个月 CPI $y_j$（2023-01）
+- 模型输出：$\widehat{\Delta CPI_{ij}}$
+- 还原目标值：$\widehat{y_i} = y_j + \widehat{\Delta CPI_{ij}}$
+
+### 5.2 关键约束
+
+| 约束 | 说明 |
+|------|------|
+| 时间顺序 | $x_j$ 必须早于 $x_i$ |
+| 窗口不重叠 | $x_i$ 起始月份与 $x_j$ 结束月份至少间隔 12 个月 |
+| 已知参考值 | $y_j$ 在预测时必须是已知的，避免数据泄漏 |
+| 按目标窗口划分 | 验证集/测试集的配对以目标窗口 $i$ 的 split 归属为准 |
+
+### 5.3 参考窗口选择策略
+
+为了避免 $\Delta CPI$ 样本对集中在单一区间，按 $\Delta CPI = y_i - y_j$ 的大小分为三档：
+
+| 档位 | 区间 | 说明 |
+|------|------|------|
+| small | $\Delta CPI \le q_1$ | 差值较小（目标与参考接近） |
+| medium | $q_1 < \Delta CPI \le q_2$ | 差值中等 |
+| large | $\Delta CPI > q_2$ | 差值较大 |
+
+其中 $q_1, q_2$ 在训练集所有候选对上按 33%/67% 分位数计算，验证集和测试集复用同一阈值。
+
+每个目标窗口 $i$ 在每个档位最多选 2 个参考窗口 $j$，最终保证三档样本数量相对均衡。
+
+### 5.4 相似性规则的用途
+
+原先讨论的"趋势方向 + 跳变检测"相似性规则不再作为最终训练标签，而是用于：
+
+1. 筛除含异常跳变的窗口（避免用噪声片段误导模型）
+2. 作为可选字段 `similar_label` 保存，供后续分析
+
+相似判定标准：
+- 同方向（上升/下降/平稳）且无跳变 → `similar_label = 1`
+- 方向不同或任一有跳变 → `similar_label = 0`
+- 任一有跳变 → 直接剔除
+
+### 5.5 输出文件
+
+| 文件 | 说明 |
+|------|------|
+| `data_processed/pair_indices_train.csv` | 训练集样本对 |
+| `data_processed/pair_indices_val.csv` | 验证集样本对 |
+| `data_processed/pair_indices_test.csv` | 测试集样本对 |
+
+每行字段：`pair_id`, `sample_i_id`, `sample_j_id`, `x_i_start_date`, `x_i_end_date`, `target_i_date`, `x_j_start_date`, `x_j_end_date`, `target_j_date`, `cpi_i`, `cpi_j`, `delta_cpi`, `delta_bin`, `similar_label`。
+
+### 5.6 生成脚本
+
+```bash
+python -m src.create_siamese_pairs
+```
+
+### 5.7 下游使用方式
+
+杜艾佳的储备池仿真模块读取 `pair_indices_train.csv`：
+- 对每一行，把 `sample_i_id` 和 `sample_j_id` 对应的历史窗口输入**同一个**储备池
+- 得到两个状态向量后，用 MSE 训练模型预测 `delta_cpi`
+- 预测时用 `cpi_j + delta_cpi_hat` 还原目标 CPI
+
+---
+
+## 6. 参考文献
 
 1. Bromley, J. et al. "Signature verification using a 'Siamese' time delay neural network." *NIPS* (1993). — 孪生网络原始论文。
 
