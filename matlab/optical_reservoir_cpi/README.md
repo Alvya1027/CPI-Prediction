@@ -33,7 +33,20 @@ outputs = run_all_cpi_simulations();
 
 ```powershell
 python -m src.siamese_reservoir_regression
+python -m src.optical_reservoir_regression
 ```
+
+第一条命令训练孪生状态差读出，第二条命令训练普通单状态读出并生成两种模型的统一对比表和预测图。
+
+## 新版 MATLAB 兼容
+
+老师模型保存于 R2016a。当前脚本在工作副本中自动完成以下兼容处理：
+
+- `repair_legacy_noise_block.m`：将缺失的旧版激光高斯噪声模块替换为等价的 Simulink 随机数模块；
+- `remove_optional_spectrum_analyzer.m`：将只负责显示的频谱分析仪替换为 Terminator；
+- `ensure_cpi_state_logger.m`：增加独立 `CPIStateData` 记录器，以 Timeseries 格式保存时间和响应。
+
+原始 `ESN/SL_RC.slx` 始终保留不变。模型内部已有 `4 us` 输入延迟，脚本在延迟后按 40 ps 间隔提取状态。
 
 ## 固定参数
 
@@ -52,6 +65,9 @@ mask 的幅度只根据训练集确定，验证集和测试集沿用同一个 ma
 - `config_cpi_rc.m`：集中保存仿真参数和路径。
 - `prepare_cpi_inputs.m`：生成固定 mask 与三个数据划分的 `simin`。
 - `run_cpi_simulation.m`：调用 Simulink 并保存模型输出。
+- `repair_legacy_noise_block.m`：兼容新版 MATLAB 中已移除的旧噪声模块。
+- `remove_optional_spectrum_analyzer.m`：移除额外工具箱依赖的显示模块。
+- `ensure_cpi_state_logger.m`：记录真正的储备池输出及时间轴。
 - `extract_cpi_states.m`：根据时间轴动态截取响应，生成 `样本数 x 50` 状态矩阵。
 - `run_all_cpi_simulations.m`：依次完成输入、仿真和状态提取。
 - `data/cpi_windows.mat`：Python 导出的 CPI 窗口、标签、日期和样本索引。

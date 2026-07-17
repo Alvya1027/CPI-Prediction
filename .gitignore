@@ -5,4 +5,6 @@ tmp/
 ~$*.docx
 matlab/optical_reservoir_cpi/inputs/*.mat
 matlab/optical_reservoir_cpi/responses/*.mat
-matlab/optical_reservoir_cpi/states/*.mat
+matlab/optical_reservoir_cpi/*.slxc
+matlab/optical_reservoir_cpi/*.slx.r20*
+matlab/optical_reservoir_cpi/slprj/

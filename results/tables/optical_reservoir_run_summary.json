@@ -1,0 +1,5 @@
+{
+  "task": "ordinary optical reservoir direct CPI regression",
+  "selected_alpha": 10.0,
+  "reservoir_training": "fixed; only the Ridge readout is trained"
+}

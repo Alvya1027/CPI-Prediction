@@ -13,23 +13,41 @@ config = config_cpi_rc();
 input_file = fullfile(config.input_dir, sprintf('simin_%s.mat', split));
 assert(exist(input_file, 'file') == 2, ...
     'Input file not found. Run prepare_cpi_inputs first.');
-assert(exist(config.model_file, 'file') == 2, ...
+assert(isfile(config.model_file), ...
     'SL_RC.slx is missing from the CPI working directory.');
 
 input_data = load(input_file);
-evalin('base', 'clear ScopeData ScopeData1');
+evalin('base', 'clear CPIStateData ScopeData ScopeData1');
 assignin('base', 'simin', input_data.simin);
 
 [~, model_name] = fileparts(config.model_file);
 load_system(config.model_file);
+repair_legacy_noise_block(model_name);
+remove_optional_spectrum_analyzer(model_name);
+ensure_cpi_state_logger(model_name);
 set_param(model_name, 'StopTime', ...
     num2str(input_data.simulation_stop_time, '%.17g'));
 
-simulation_output = sim(model_name);
+simulation_output = sim(model_name, 'ReturnWorkspaceOutputs', 'on');
 
 ScopeData = [];
-scope_names = {'ScopeData', 'ScopeData1'};
+try
+    logged_signals = simulation_output.get('logsout');
+    if isa(logged_signals, 'Simulink.SimulationData.Dataset')
+        logged_element = logged_signals.getElement('CPIReservoirState');
+        if ~isempty(logged_element)
+            ScopeData = logged_element.Values;
+        end
+    end
+catch
+    ScopeData = [];
+end
+
+scope_names = {'CPIStateData', 'ScopeData', 'ScopeData1'};
 for name_index = 1:numel(scope_names)
+    if ~isempty(ScopeData)
+        break;
+    end
     scope_name = scope_names{name_index};
     try
         ScopeData = simulation_output.get(scope_name);

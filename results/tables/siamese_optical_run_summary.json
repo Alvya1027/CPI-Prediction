@@ -1,0 +1,9 @@
+{
+  "task": "siamese optical reservoir CPI difference regression",
+  "state_directory": "D:\\个人\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi\\states",
+  "feature_mode": "signed_diff",
+  "aggregation": "mean",
+  "selected_alpha": 10.0,
+  "reservoir_training": "fixed; only the Ridge readout is trained",
+  "formula": "cpi_i_hat = cpi_j + delta_cpi_hat"
+}
