@@ -206,3 +206,21 @@ test = np.load("data_processed/cpi_seq_test.npy")
 ```bash
 python -m src.create_monthly_datasets
 ```
+
+## 孪生回归样本对
+
+以下文件将目标窗口 `i` 与已知历史参考窗口 `j` 配对：
+
+- `pair_indices_train.csv`
+- `pair_indices_val.csv`
+- `pair_indices_test.csv`
+
+回归标签为 `delta_cpi = cpi_i - cpi_j`，最终预测按 `cpi_i_hat = cpi_j + delta_cpi_hat` 还原。`similar_label` 只保留作分析，不作为模型最终目标。
+
+训练集允许按 `delta_cpi` 分层控制样本分布。验证集和测试集不能使用真实目标 CPI 选择参考，因此只根据两个已知输入窗口的 `window_distance` 选择最近历史参考。当前验证集 45 个目标、测试集 47 个目标均完整覆盖，每个目标使用 5 个参考窗口。
+
+重新生成：
+
+```bash
+python -m src.create_siamese_pairs
+```

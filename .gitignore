@@ -1,3 +1,8 @@
 __pycache__/
 *.pyc
-
+tmp/
+~$*.xlsx
+~$*.docx
+matlab/optical_reservoir_cpi/inputs/*.mat
+matlab/optical_reservoir_cpi/responses/*.mat
+matlab/optical_reservoir_cpi/states/*.mat

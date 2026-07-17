@@ -12,8 +12,9 @@
   1. 参考窗口 j 必须早于目标窗口 i（开始月份差距 >= 12 个月），避免窗口重叠。
   2. j 的下一个月 CPI（cpi_j）在预测时必须是已知的，避免数据泄漏。
   3. 样本对按目标窗口 i 所属的数据集划分 train/val/test。
-  4. 按 delta_cpi 的小/中/大三档分层采样参考窗口，避免样本对集中在单一区间。
-  5. 保留相似性判断规则作为参考窗口筛选条件（可选），但 0/1 标签不再作为最终训练目标。
+  4. 训练集按 delta_cpi 的小/中/大三档分层采样，避免训练对集中在单一区间。
+  5. 验证集和测试集只按输入窗口距离选择参考，不能用真实目标 CPI 选参考。
+  6. 保留相似性判断规则作为分析字段，但 0/1 标签不再作为最终训练目标。
 
 输入：
   data_processed/X_train.npy / y_train.npy
@@ -40,7 +41,9 @@
   cpi_j            : 参考下一个月 CPI
   delta_cpi        : cpi_i - cpi_j
   delta_bin        : delta_cpi 所属区间，small / medium / large
-  similar_label    : 可选相似标签（1=相似，0=不相似，-1=跳变剔除）
+  window_distance  : 只根据两个输入窗口计算的距离
+  selection_method : 参考窗口选择方法
+  similar_label    : 可选相似标签（1=相似，0=不相似或含跳变）
 
 用法：
   python -m src.create_siamese_pairs
@@ -60,6 +63,7 @@ DATA_DIR = ROOT_DIR / "data_processed"
 WINDOW_SIZE = 12                    # 每个 CPI 窗口长度
 MIN_GAP_MONTHS = WINDOW_SIZE        # 目标窗口与参考窗口至少间隔 12 个月，避免重叠
 MAX_PAIRS_PER_BIN = 2               # 每个目标窗口在每个 delta_cpi 区间最多选几个 j
+MAX_EVAL_REFERENCES = 5             # 验证/测试每个目标最多选择几个历史参考窗口
 TREND_THRESHOLD = 0.05              # 趋势方向阈值
 JUMP_ZSCORE_THRESHOLD = 2.0         # 一阶差分跳变检测阈值
 RANDOM_SEED = 42                    # 随机种子，保证可复现
@@ -127,6 +131,20 @@ def _detect_jump(segment: np.ndarray, z_thresh: float = JUMP_ZSCORE_THRESHOLD) -
     return bool(np.any(np.abs(z_scores) > z_thresh))
 
 
+def _window_distance(seg_i: np.ndarray, seg_j: np.ndarray) -> float:
+    """计算两个窗口的形状距离，只使用预测时已知的输入值。"""
+    x_i = np.asarray(seg_i, dtype=float)
+    x_j = np.asarray(seg_j, dtype=float)
+
+    def _zscore(x: np.ndarray) -> np.ndarray:
+        std = float(np.std(x))
+        if std == 0:
+            return x - float(np.mean(x))
+        return (x - float(np.mean(x))) / std
+
+    return float(np.linalg.norm(_zscore(x_i) - _zscore(x_j)) / np.sqrt(len(x_i)))
+
+
 def _trend_direction(trend: float) -> str:
     """根据线性斜率判断趋势方向。"""
     if trend > TREND_THRESHOLD:
@@ -140,17 +158,16 @@ def _compute_similar_label(
     seg_i: np.ndarray,
     seg_j: np.ndarray,
 ) -> int:
-    """判断两个 CPI 窗口是否相似，返回 1/0/-1。
+    """判断两个 CPI 窗口是否相似，返回 1/0。
 
     返回：
         1  : 相似（同方向且无跳变）
-        0  : 不相似（方向不同或任一有跳变）
-        -1 : 任一片段含跳变，直接剔除
+        0  : 趋势不同或任一片段含跳变
     """
     jump_i = _detect_jump(seg_i)
     jump_j = _detect_jump(seg_j)
     if jump_i or jump_j:
-        return -1
+        return 0
 
     trend_i = _extract_segment_features(seg_i)["trend"]
     trend_j = _extract_segment_features(seg_j)["trend"]
@@ -207,36 +224,44 @@ def _build_candidate_pairs(
     y_j = ref_split["y"]
     idx_j = ref_split["index"]
 
-    rows = []
-    for i in range(len(X_i)):
-        x_start_i = pd.to_datetime(str(idx_i.iloc[i]["x_start_date"]))
-        target_date_i = pd.to_datetime(str(idx_i.iloc[i]["target_date"]))
+    start_i = pd.to_datetime(idx_i["x_start_date"])
+    end_j = pd.to_datetime(idx_j["x_end_date"])
+    start_i_month = (start_i.dt.year * 12 + start_i.dt.month).to_numpy()
+    end_j_month = (end_j.dt.year * 12 + end_j.dt.month).to_numpy()
 
-        for j in range(len(X_j)):
-            x_end_j = pd.to_datetime(str(idx_j.iloc[j]["x_end_date"]))
-            target_date_j = pd.to_datetime(str(idx_j.iloc[j]["target_date"]))
+    gaps = start_i_month[:, None] - end_j_month[None, :]
+    i_rows, j_rows = np.where(gaps >= min_gap_months)
+    if len(i_rows) == 0:
+        return pd.DataFrame()
 
-            # 关键约束：参考窗口必须早于目标窗口，且不重叠。
-            # 用 x_i_start_date 与 x_j_end_date 的月数差判断是否满足 min_gap_months。
-            gap = _month_diff(x_start_i, x_end_j)
-            if gap < min_gap_months:
-                continue
+    def _zscore_rows(values: np.ndarray) -> np.ndarray:
+        means = values.mean(axis=1, keepdims=True)
+        stds = values.std(axis=1, keepdims=True)
+        stds[stds == 0] = 1.0
+        return (values - means) / stds
 
-            rows.append({
-                "sample_i_id": int(idx_i.iloc[i]["sample_id"]),
-                "sample_j_id": int(idx_j.iloc[j]["sample_id"]),
-                "x_i_start_date": idx_i.iloc[i]["x_start_date"],
-                "x_i_end_date": idx_i.iloc[i]["x_end_date"],
-                "target_i_date": idx_i.iloc[i]["target_date"],
-                "x_j_start_date": idx_j.iloc[j]["x_start_date"],
-                "x_j_end_date": idx_j.iloc[j]["x_end_date"],
-                "target_j_date": idx_j.iloc[j]["target_date"],
-                "cpi_i": round(float(y_i[i]), 4),
-                "cpi_j": round(float(y_j[j]), 4),
-                "delta_cpi": round(float(y_i[i] - y_j[j]), 4),
-            })
+    x_i_z = _zscore_rows(np.asarray(X_i, dtype=float))
+    x_j_z = _zscore_rows(np.asarray(X_j, dtype=float))
+    distances = np.linalg.norm(x_i_z[i_rows] - x_j_z[j_rows], axis=1) / np.sqrt(
+        X_i.shape[1]
+    )
+    cpi_i = np.asarray(y_i, dtype=float).reshape(-1)[i_rows]
+    cpi_j = np.asarray(y_j, dtype=float).reshape(-1)[j_rows]
 
-    return pd.DataFrame(rows)
+    return pd.DataFrame({
+        "sample_i_id": idx_i["sample_id"].to_numpy(dtype=int)[i_rows],
+        "sample_j_id": idx_j["sample_id"].to_numpy(dtype=int)[j_rows],
+        "x_i_start_date": idx_i["x_start_date"].to_numpy()[i_rows],
+        "x_i_end_date": idx_i["x_end_date"].to_numpy()[i_rows],
+        "target_i_date": idx_i["target_date"].to_numpy()[i_rows],
+        "x_j_start_date": idx_j["x_start_date"].to_numpy()[j_rows],
+        "x_j_end_date": idx_j["x_end_date"].to_numpy()[j_rows],
+        "target_j_date": idx_j["target_date"].to_numpy()[j_rows],
+        "cpi_i": np.round(cpi_i, 4),
+        "cpi_j": np.round(cpi_j, 4),
+        "delta_cpi": np.round(cpi_i - cpi_j, 4),
+        "window_distance": np.round(distances, 6),
+    })
 
 
 def _compute_delta_bin_thresholds(
@@ -361,11 +386,18 @@ def _build_all_pairs_for_split(
         candidates.append(cand)
     candidates = pd.concat(candidates, ignore_index=True)
 
-    # 使用训练集的分位数阈值划分 delta_bin
-    candidates = _assign_delta_bins(candidates, train_thresholds)
-
-    # 按目标窗口和 delta_bin 分层采样
-    sampled = _sample_pairs_by_bin(candidates, max_per_bin=MAX_PAIRS_PER_BIN)
+    # 验证/测试选参考时不能使用 cpi_i 或 delta_cpi，否则会泄漏目标标签。
+    # 这里只依据两个已知输入窗口的距离选择最近历史参考。
+    sampled = (
+        candidates.sort_values(
+            ["sample_i_id", "window_distance", "target_j_date", "sample_j_id"]
+        )
+        .groupby("sample_i_id", as_index=False, group_keys=False)
+        .head(MAX_EVAL_REFERENCES)
+        .reset_index(drop=True)
+    )
+    sampled = _assign_delta_bins(sampled, train_thresholds)
+    sampled["selection_method"] = "window_distance"
 
     return sampled
 
@@ -399,6 +431,7 @@ def main() -> None:
 
     # 按目标窗口分层采样训练集
     train_pairs = _sample_pairs_by_bin(train_candidates, max_per_bin=MAX_PAIRS_PER_BIN)
+    train_pairs["selection_method"] = "delta_stratified_train_only"
 
     # 构造验证集和测试集样本对
     print("--- 验证集样本对 ---")
@@ -431,11 +464,10 @@ def main() -> None:
     val_pairs = _add_similar_labels(val_pairs, all_X)
     test_pairs = _add_similar_labels(test_pairs, all_X)
 
-    # 剔除含跳变的样本对（similar_label == -1）
-    # 如果项目希望保留跳变对作为负样本，可以注释掉下面三行
-    train_pairs = train_pairs[train_pairs["similar_label"] != -1].reset_index(drop=True)
-    val_pairs = val_pairs[val_pairs["similar_label"] != -1].reset_index(drop=True)
-    test_pairs = test_pairs[test_pairs["similar_label"] != -1].reset_index(drop=True)
+    # 相似标签只用于分析，不能据此删除目标月份；每个目标都必须得到预测。
+    train_pairs = train_pairs.reset_index(drop=True)
+    val_pairs = val_pairs.reset_index(drop=True)
+    test_pairs = test_pairs.reset_index(drop=True)
 
     # 添加 pair_id
     train_pairs.insert(0, "pair_id", range(len(train_pairs)))
@@ -463,7 +495,7 @@ def main() -> None:
     print()
     print("相似标签分布（1=相似，0=不相似）:")
     for name, df in [("train", train_pairs), ("val", val_pairs), ("test", test_pairs)]:
-        counts = df[df["similar_label"] != -1]["similar_label"].value_counts().to_dict()
+        counts = df["similar_label"].value_counts().to_dict()
         print(f"  {name}: 相似={counts.get(1, 0)}, 不相似={counts.get(0, 0)}")
 
     # 生成验证与统计报告
@@ -529,17 +561,26 @@ def _generate_report(
         "",
         f"**较大 CPI 差值区间（large）样本总数：{large_total} 对**",
         "",
-        "## 3. 相似标签分布",
+        "## 3. 相似标签与目标覆盖",
         "",
-        "| 数据集 | 相似（1） | 不相似（0） | 含跳变已剔除 |",
-        "|--------|----------:|------------:|-------------:|",
+        "| 数据集 | 相似（1） | 不相似或含跳变（0） | 已覆盖目标数 | 应覆盖目标数 |",
+        "|--------|----------:|--------------------:|-------------:|-------------:|",
     ])
 
+    sample_index = pd.read_csv(DATA_DIR / "sample_index.csv")
     for name, df in [("训练集", train_pairs), ("验证集", val_pairs), ("测试集", test_pairs)]:
         sim = (df["similar_label"] == 1).sum()
         dis = (df["similar_label"] == 0).sum()
-        removed = ((df["similar_label"] == -1)).sum()
-        lines.append(f"| {name} | {sim} | {dis} | {removed} |")
+        split_name = {"训练集": "train", "验证集": "val", "测试集": "test"}[name]
+        expected = int((sample_index["split"] == split_name).sum())
+        if split_name == "train":
+            train_index = sample_index[sample_index["split"] == "train"].copy()
+            starts = pd.to_datetime(train_index["x_start_date"])
+            first_end = pd.to_datetime(train_index["x_end_date"]).min()
+            gaps = (starts.dt.year - first_end.year) * 12 + (starts.dt.month - first_end.month)
+            expected = int((gaps >= MIN_GAP_MONTHS).sum())
+        covered = int(df["sample_i_id"].nunique())
+        lines.append(f"| {name} | {sim} | {dis} | {covered} | {expected} |")
 
     # 时间泄漏检查
     def _check_leakage(df: pd.DataFrame) -> Tuple[bool, int]:
@@ -575,6 +616,8 @@ def _generate_report(
         "说明：",
         "- target_j_date 必须早于 target_i_date，确保参考 CPI 在预测时已知。",
         f"- x_i_start_date 与 x_j_end_date 至少间隔 {MIN_GAP_MONTHS} 个月，确保两个 12 个月窗口不重叠。",
+        "- 验证集和测试集按 window_distance 选择参考，不使用 cpi_i 或 delta_cpi。",
+        "- delta_bin 在验证集和测试集中只用于结果分析，不参与参考选择。",
         "",
         "## 5. 样本对字段说明",
         "",
@@ -593,7 +636,9 @@ def _generate_report(
         "| cpi_j | 参考下一个月 CPI |",
         "| delta_cpi | cpi_i - cpi_j（回归标签） |",
         "| delta_bin | delta_cpi 所属区间：small / medium / large |",
-        "| similar_label | 可选相似标签：1=相似，0=不相似，-1=含跳变已剔除 |",
+        "| window_distance | 由两个已知输入窗口计算的形状距离 |",
+        "| selection_method | 训练集为差值分层；验证/测试为窗口距离 |",
+        "| similar_label | 可选相似标签：1=相似，0=不相似或含跳变 |",
         "",
         "## 6. 相似性筛选规则",
         "",
@@ -615,9 +660,8 @@ def _generate_report(
         "",
         "- similar_label = 1：两个片段趋势方向相同，且都不含跳变。",
         "- similar_label = 0：两个片段趋势方向不同，或任一片段含跳变。",
-        "- similar_label = -1：任一片段含跳变，该样本对将被剔除。",
         "",
-        "注意：similar_label 仅用于样本筛选和参考时期筛选，不作为孪生回归网络的最终训练目标。最终训练目标为 delta_cpi。",
+        "注意：similar_label 仅用于分析，不删除目标月份，也不作为孪生回归网络的最终训练目标。最终训练目标为 delta_cpi。",
         "",
         "## 7. 生成脚本",
         "",

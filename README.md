@@ -1,82 +1,39 @@
-\# CPI-prediction
+# CPI Prediction
 
+本项目研究 CPI 月度小样本预测。当前核心方法为孪生光储备池回归：两个共享参数的光储备池分支提取目标窗口和历史参考窗口的动态状态，回归读出层预测连续 CPI 差值，再利用已知参考 CPI 还原目标 CPI。
 
+## 模型定义
 
-本项目面向 CPI 月度数据的小样本预测问题，计划依次实现传统基线模型、普通储备池模型、光储备池仿真模型和孪生光储备池模型。
+```text
+x_i -> shared optical reservoir -> h_i --+
+                                          +-> Ridge readout -> delta_cpi_hat
+x_j -> shared optical reservoir -> h_j --+
 
+cpi_i_hat = cpi_j + delta_cpi_hat
+```
 
+相似标签只用于参考窗口分析，不是最终分类目标。第一版不使用 Contrastive Loss，也不训练光储备池内部参数，只训练回归读出层。
 
-\## 当前阶段
+## 当前流程
 
+1. `python -m src.create_siamese_pairs`：生成无目标泄漏的训练、验证、测试样本对。
+2. `python -m src.export_cpi_to_matlab`：导出与 baseline 相同的 12 个月窗口。
+3. 在 MATLAB 中运行 `run_all_cpi_simulations`：生成固定 mask、运行 `SL_RC.slx` 并提取状态。
+4. `python -m src.siamese_reservoir_regression`：训练差值回归读出层并计算 MAE、RMSE。
 
+详细接口见 `docs/siamese_optical_reservoir_interface.md`。
 
-第 1 阶段：数据整理与基础预测框架搭建。
+## 仓库结构
 
+- `data_raw/`：原始 CPI 数据。
+- `data_processed/`：清洗数据、滑动窗口和孪生样本对。
+- `src/`：Python 数据处理、baseline 和孪生回归代码。
+- `ESN/`：老师提供的原始 MATLAB/Simulink 文件，只作保留。
+- `matlab/optical_reservoir_cpi/`：CPI 光储备池工作副本和动态接口。
+- `results/`：指标、预测表和图片。
+- `docs/`：项目说明、报告和周计划。
 
+## 路径约定
 
-\## 仓库结构
-
-
-
-\- data\_raw：原始 CPI 数据
-
-\- data\_processed：清洗后的数据和训练集
-
-\- notebooks：实验 notebook
-
-\- src：可复用 Python 代码
-
-\- matlab：光储备池 Matlab 仿真代码
-
-\- results：实验结果、图片、表格
-
-\- docs：项目文档、文献笔记、周报
-
-
-
-\## 成员分工
-
-
-
-\- A：项目管理与实验框架
-
-\- B：数据收集与预处理
-
-\- C：基线模型	
-
-\- D：储备池与孪生网络预研
-
-
-
-\## 注意事项
-
-大家把 CPI-prediction 仓库 clone 到自己电脑任意位置都可以，不需要统一放在 C 盘或 D 盘。
-
-
-
-但有两个要求：
-
-
-
-不要改仓库内部文件夹名字，比如 data\_raw、data\_processed、docs、notebooks、results、src 这些保持一致。
-
-代码里不要写自己电脑的绝对路径，比如 C:/Users/xxx/Desktop/...，统一通过 src/config.py 读取路径。
-
-
-
-比如读取 CPI 数据时，不要写：
-
-
-
-df = pd.read\_csv("C:/Users/xxx/Desktop/CPI-prediction/data\_processed/cpi\_monthly.csv")
-
-
-
-而要写：
-
-
-
-from src.config import DATA\_PROCESSED\_DIR
-
-df = pd.read\_csv(DATA\_PROCESSED\_DIR / "cpi\_monthly.csv")
+不要在代码中写个人电脑的绝对路径。Python 统一从 `src/config.py` 读取项目路径；MATLAB 统一使用脚本所在目录构造路径。
 

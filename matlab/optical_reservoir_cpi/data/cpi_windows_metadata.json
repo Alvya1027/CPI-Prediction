@@ -1,0 +1,37 @@
+{
+  "description": "CPI windows shared with the baseline models",
+  "source_directory": "data_processed",
+  "window_size": 12,
+  "forecast_horizon_months": 1,
+  "split_method": "chronological 70/15/15",
+  "input_for_reservoir": "X_<split>_scaled",
+  "target_for_evaluation": "y_<split>",
+  "scaler_fit_scope": "training split only",
+  "scaler_parameters": {
+    "scaler_type": "standard",
+    "X_mean": 102.21273584905661,
+    "X_std": 2.0731849072825197,
+    "y_mean": 102.26415094339623,
+    "y_std": 2.0467836563024093
+  },
+  "splits": {
+    "train": {
+      "num_samples": 212,
+      "window_size": 12,
+      "first_target_date": "2001-01",
+      "last_target_date": "2018-08"
+    },
+    "val": {
+      "num_samples": 45,
+      "window_size": 12,
+      "first_target_date": "2018-09",
+      "last_target_date": "2022-05"
+    },
+    "test": {
+      "num_samples": 47,
+      "window_size": 12,
+      "first_target_date": "2022-06",
+      "last_target_date": "2026-04"
+    }
+  }
+}
