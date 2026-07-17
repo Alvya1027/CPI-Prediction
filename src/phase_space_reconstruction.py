@@ -6,20 +6,191 @@ import matplotlib.pyplot as plt
 plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']
 plt.rcParams['axes.unicode_minus'] = False
 
-#1 数据加载
-#cpi_data = pd.read_csv(DATA_PROCESSED_DIR / 'cpi_data_lastyear=100.csv')
-cpi_data = pd.read_csv(DATA_PROCESSED_DIR / 'cpi_data_lastmonth=100.csv')
+# ------------------------------
+# 1. 加载数据
+# ------------------------------
+data = pd.read_csv(DATA_PROCESSED_DIR / 'cpi_data_lastmonth=100.csv')
+ts = np.array(data['actual'])
+'''
+x_train = np.load(DATA_PROCESSED_DIR / 'cpi_seq_train.npy')
+x_val = np.load(DATA_PROCESSED_DIR / 'cpi_seq_val.npy')
+x_test = np.load(DATA_PROCESSED_DIR / 'cpi_seq_test.npy')
+x = np.append(x_train, x_val, axis=0)
+ts = np.append(x, x_test, axis=0)
+'''
+print(ts)
+# 若为一维数组则直接使用，若多维可根据需要展平或取第一列
+if ts.ndim > 1:
+    ts = ts.ravel()
 
-#2 数据预处理
-cpi_data = pd.get_dummies(cpi_data, columns=['month'])
-cpi = np.array(cpi_data['actual'])
-features = cpi_data.drop('actual', axis=1)
-features_list = list(features.columns)
+
+# ------------------------------
+# 2. 互信息法求延迟时间 tau
+# ------------------------------
+def mutual_information(ts, max_lag, bins=20):
+    """
+    计算时间序列在不同延迟下的互信息
+    ts: 一维时间序列
+    max_lag: 最大延迟
+    bins: 直方图的箱数
+    返回: lags, mi (互信息值)
+    """
+    n = len(ts)
+    mi = np.zeros(max_lag)
+    # 数据归一化到 [0,1] 以便分箱
+    ts_norm = (ts - np.min(ts)) / (np.max(ts) - np.min(ts) + 1e-10)
+    for lag in range(1, max_lag + 1):
+        x = ts_norm[:n - lag]
+        y = ts_norm[lag:]
+        # 二维直方图联合概率
+        joint, _, _ = np.histogram2d(x, y, bins=bins, range=[[0, 1], [0, 1]])
+        joint = joint / np.sum(joint)  # 联合概率
+        # 边缘概率
+        px = np.sum(joint, axis=1)
+        py = np.sum(joint, axis=0)
+        # 只保留非零项
+        non_zero = joint > 0
+        # 互信息 I(X;Y) = sum P(x,y) log(P(x,y)/(P(x)P(y)))
+        mi[lag - 1] = np.sum(joint[non_zero] *
+                             np.log(joint[non_zero] / (px[:, None] * py)[non_zero]))
+    lags = np.arange(1, max_lag + 1)
+    return lags, mi
+
+
+def find_first_minimum(mi):
+    """寻找互信息曲线的第一个极小值对应的索引"""
+    for i in range(1, len(mi) - 1):
+        if mi[i] < mi[i - 1] and mi[i] < mi[i + 1]:
+            return i + 1  # lag = index+1
+    # 如果找不到明显的极小值，取下降变缓的点（经验：取连续下降后首次回升的前一点）
+    diffs = np.diff(mi)
+    for i in range(len(diffs) - 1):
+        if diffs[i] < 0 and diffs[i + 1] > 0:
+            return i + 2
+    # 最终回退到延迟 1
+    return 1
+
+
+# 计算延迟时间
+max_lag = 50  # 根据序列长度可调
+lags, mi = mutual_information(ts, max_lag)
+tau = find_first_minimum(mi)
+print(f"互信息法确定的延迟时间 tau = {tau}")
+
+
+# ------------------------------
+# 3. Cao 方法求嵌入维数 m
+# ------------------------------
+def cao_method(ts, tau, max_dim=10):
+    """
+    Cao方法确定嵌入维数
+    ts: 一维时间序列
+    tau: 延迟时间
+    max_dim: 最大尝试嵌入维数
+    返回: dims, E1(d) (E1接近饱和时对应的 d 即为嵌入维数)
+    """
+    n = len(ts)
+    # 计算最大的相空间点数
+    N = n - (max_dim - 1) * tau
+    if N < 10:
+        raise ValueError("时间序列太短，无法计算到 max_dim 维")
+
+    E1 = np.zeros(max_dim - 1)  # 存储维度从2开始到max_dim
+    for d in range(2, max_dim + 1):
+        # 构建 d 维相空间
+        m = d
+        N_d = n - (m - 1) * tau
+        # 向量 (N_d x m)
+        vectors = np.array([ts[i: i + N_d] for i in range(m)]).T  # shape (N_d, m)
+
+        # 计算最近邻距离（欧几里得）以及下一维度的距离
+        # 为了提高效率，可以直接计算
+        a = np.zeros(N_d)
+        for i in range(N_d):
+            # 排除自身
+            diff = vectors - vectors[i]
+            # 欧氏距离
+            dist = np.sqrt(np.sum(diff ** 2, axis=1))
+            dist[i] = np.inf
+            nn_idx = np.argmin(dist)
+            # d 维最近邻距离
+            dist_d = dist[nn_idx]
+            # d+1 维中的距离（需要时间序列的额外点）
+            if i + m * tau < n and nn_idx + m * tau < n:
+                # d+1 维向量的第 d 个坐标是 ts[i + m*tau] (这里 m = d, 所以实际是 ts[i+d*tau])
+                # 注意: 延迟坐标: [x(i), x(i+tau), ..., x(i+(d-1)*tau)]
+                dist_d1 = np.sqrt(dist_d ** 2 + (ts[i + d * tau] - ts[nn_idx + d * tau]) ** 2)
+            else:
+                # 如果超出长度，忽略该点
+                dist_d1 = np.inf
+            if dist_d > 0:
+                a[i] = dist_d1 / dist_d
+            else:
+                a[i] = 1.0  # 避免除零
+        # E(d) = 1/(N_d) * sum a(i)
+        valid = np.isfinite(a)
+        if np.sum(valid) == 0:
+            E1[d - 2] = np.nan
+        else:
+            E1[d - 2] = np.mean(a[valid])
+
+    # 计算 E1(d) = E(d+1)/E(d) 的变化，通常画图找饱和点
+    # Cao 方法通常看 E1(d) 是否停止变化（接近1），或者计算 E2(d)
+    # 简化：找到 E1(d) 变化小于阈值且后续稳定的维数
+    # 这里计算 E1 的差分比值
+    dims = np.arange(2, max_dim + 1)
+
+    # 寻找第一个满足 |E1(d) - E1(d-1)| 很小的点
+    threshold = 0.05  # 可根据实际情况调整
+    for i in range(1, len(E1)):
+        if np.abs(E1[i] - E1[i - 1]) < threshold and E1[i] < 1.2:
+            m_opt = dims[i]
+            break
+    else:
+        # 没找到就取 E1 最小值对应的维度
+        m_opt = dims[np.argmin(np.abs(E1 - 1))]
+    return dims, E1, m_opt
+
+#tau = 2
+
+max_dim = 30
+dims, E1, m = cao_method(ts, tau, max_dim)
+print(f"Cao 方法确定的嵌入维数 m = {m}")
+print(f"不同嵌入维数下的 E1 值: {dict(zip(dims, E1))}")
+
+#m=10
+
+# 最终结果
+print(f"\n相空间重构参数: 延迟时间 τ = {tau}, 嵌入维数 m = {m}")
+
+# 相空间重构
+N = len(ts)
+num_vectors = N - (m - 1) * tau
+X_reconstructed = np.array([ts[i: i + num_vectors] for i in range(0, m * tau, tau)]).T
+
+# 对齐特征与目标：舍弃最后一个无法预测的相点
+features = X_reconstructed[:-1]          # 前 3612 个相点
+start_idx = (m - 1) * tau
+targets = ts[start_idx + 1 : start_idx + 1 + num_vectors - 1]
+
+print(f"特征形状: {features.shape}, 目标形状: {targets.shape}")
+
+# 将特征和目标按列合并
+data_total = np.column_stack((features, targets))  # 最后一列为目标值
+# 使用 pandas 保存（带列名更清晰）
+df = pd.DataFrame(data_total, columns=[f'feature_{i}' for i in range(features.shape[1])] + ['target'])
+df.to_csv('reconstructed_data.csv', index=False)
+
+np.set_printoptions(precision=2, suppress=True, linewidth=120)  # 控制输出格式
+print(features)
+print(targets)
+
+features_list = np.arange(m)
 
 #3 数据划分
 from sklearn.model_selection import train_test_split, RandomizedSearchCV, GridSearchCV
 from sklearn.preprocessing import StandardScaler
-x_train, x_test, y_train, y_test = train_test_split(features, cpi, test_size=0.1, shuffle=False)
+x_train, x_test, y_train, y_test = train_test_split(features, targets, test_size=0.1, shuffle=False)
 
 transfer = StandardScaler()
 x_train_standard = transfer.fit_transform(x_train)
