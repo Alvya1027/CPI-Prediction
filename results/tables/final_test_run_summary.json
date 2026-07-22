@@ -1,0 +1,28 @@
+{
+  "status": "final_test_completed_locked",
+  "run_timestamp": "2026-07-22T16:36:03",
+  "frozen_configuration_sha256": "58CD8BBEFA690E538F40271CB8F0C811FC6A93E8CA1D2F69EA63FFA96A894285",
+  "frozen_siamese_configuration": {
+    "status": "validation_selected_not_tested",
+    "reference_strategy": "window_distance",
+    "k": 10,
+    "feature_mode": "signed_diff",
+    "aggregation": "inverse_distance",
+    "alpha": 10.0,
+    "validation_mae": 0.3728490424497194,
+    "validation_rmse": 0.46596373801318103,
+    "num_train_pairs": 972,
+    "num_validation_pairs": 450,
+    "num_validation_targets": 45,
+    "selection_primary_metric": "validation target-level RMSE",
+    "selection_tie_break": "MAE, simpler feature/aggregation, smaller K",
+    "reference_information_boundary": "input-window distance or already-published reference date only",
+    "test_state_loaded": false,
+    "test_pairs_loaded": false,
+    "test_evaluated": false
+  },
+  "test_targets": 47,
+  "test_run_policy": "one-time final evaluation; do not tune or rerun",
+  "comparison_file": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\results\\tables\\final_model_comparison.csv",
+  "leakage_audit_file": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\results\\tables\\final_test_leakage_audit.json"
+}

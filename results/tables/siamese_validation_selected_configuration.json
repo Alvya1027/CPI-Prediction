@@ -1,0 +1,19 @@
+{
+  "status": "validation_selected_not_tested",
+  "reference_strategy": "window_distance",
+  "k": 10,
+  "feature_mode": "signed_diff",
+  "aggregation": "inverse_distance",
+  "alpha": 10.0,
+  "validation_mae": 0.3728490424497194,
+  "validation_rmse": 0.46596373801318103,
+  "num_train_pairs": 972,
+  "num_validation_pairs": 450,
+  "num_validation_targets": 45,
+  "selection_primary_metric": "validation target-level RMSE",
+  "selection_tie_break": "MAE, simpler feature/aggregation, smaller K",
+  "reference_information_boundary": "input-window distance or already-published reference date only",
+  "test_state_loaded": false,
+  "test_pairs_loaded": false,
+  "test_evaluated": false
+}

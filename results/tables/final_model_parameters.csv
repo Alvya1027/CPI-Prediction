@@ -1,0 +1,4 @@
+model,state_width,reference_strategy,k,feature_mode,aggregation,alpha,selection_source
+siamese_frozen,50,window_distance,10,signed_diff,inverse_distance,10.0,validation only
+ordinary_full_212,50,not_applicable,0,single_state,not_applicable,10.0,validation only
+ordinary_matched_189,50,not_applicable,0,single_state,not_applicable,10.0,validation only
