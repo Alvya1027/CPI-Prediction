@@ -1,0 +1,12 @@
+{
+  "task": "ordinary optical reservoir direct CPI regression",
+  "selected_alpha": 1.0,
+  "reservoir_training": "fixed; only the Ridge readout is trained",
+  "experiment": "recent_50_train_targets_only",
+  "created_at": "2026-07-23T16:42:10.947824+08:00",
+  "train_selection": "last 50 target windows from the original chronological training split",
+  "validation_and_test": "unchanged original validation/test splits",
+  "siamese_run": false,
+  "isolated_state_dir": "D:\\个人\\GitHub\\CPI-Prediction\\results\\optical_reservoir_recent50_20260723\\input_states_recent50",
+  "isolated_output_dir": "D:\\个人\\GitHub\\CPI-Prediction\\results\\optical_reservoir_recent50_20260723"
+}

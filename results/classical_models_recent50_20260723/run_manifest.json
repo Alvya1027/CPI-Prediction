@@ -1,0 +1,23 @@
+{
+  "created_at": "2026-07-23T17:29:41.626262+08:00",
+  "train_selection": "last 50 target windows from the original chronological training split",
+  "train_target_dates": [
+    "2014-07",
+    "2018-08"
+  ],
+  "train_sample_ids": [
+    162,
+    211
+  ],
+  "validation_targets": 45,
+  "test_targets": 47,
+  "models": [
+    "naive_last_value",
+    "linear_regression",
+    "ridge",
+    "svr_rbf",
+    "random_forest",
+    "gradient_boosting"
+  ],
+  "test_used_for_selection": false
+}

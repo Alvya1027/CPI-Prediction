@@ -1,0 +1,7 @@
+{
+  "model": "gradient_boosting",
+  "max_depth": 1,
+  "learning_rate": 0.03,
+  "mae": 0.9294470360707822,
+  "rmse": 1.2406148651000715
+}
