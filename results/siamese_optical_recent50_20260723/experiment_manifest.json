@@ -1,0 +1,53 @@
+{
+  "experiment": "siamese optical reservoir with last 50 supervised train targets",
+  "evaluation_status": "exploratory re-analysis; current test split was seen before",
+  "train_selection": "last 50 target windows of original chronological train split",
+  "train_target_count": 50,
+  "train_target_sample_id_min": 162,
+  "train_target_sample_id_max": 211,
+  "train_target_date_min": "2014-07",
+  "train_target_date_max": "2018-08",
+  "validation_targets": 45,
+  "test_targets": 47,
+  "num_train_pairs": 300,
+  "num_train_pair_targets": 50,
+  "historical_reference_policy": "older original-train windows may serve as already-known CPI anchors; only the recent 50 sample_i targets supervise the readout",
+  "reference_summary": {
+    "unique_historical_reference_windows": 136,
+    "reference_pairs_inside_recent50": 10,
+    "reference_pairs_before_recent50": 290,
+    "oldest_reference_sample_id": 0,
+    "newest_reference_sample_id": 175
+  },
+  "feature_mode": "signed_diff",
+  "aggregation": "inverse_distance",
+  "reference_strategy": "window_distance",
+  "validation_references_per_target": 10,
+  "test_references_per_target": 10,
+  "selected_alpha_on_validation": 10.0,
+  "optical_reservoir": "fixed; existing Simulink states reused",
+  "recent_state_cache_check": {
+    "train": {
+      "num_targets": 50,
+      "sample_id_min": 162,
+      "sample_id_max": 211,
+      "state_width": 50,
+      "max_abs_difference_from_base": 0.0
+    },
+    "val": {
+      "num_targets": 45,
+      "sample_id_min": 212,
+      "sample_id_max": 256,
+      "state_width": 50,
+      "max_abs_difference_from_base": 0.0
+    },
+    "test": {
+      "num_targets": 47,
+      "sample_id_min": 257,
+      "sample_id_max": 303,
+      "state_width": 50,
+      "max_abs_difference_from_base": 0.0
+    }
+  },
+  "ordinary_comparison_directory": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\results\\optical_reservoir_recent50_20260723"
+}
