@@ -1,0 +1,54 @@
+{
+  "experiment": "strict closed 50-window training-data budget",
+  "evaluation_status": "exploratory re-analysis; current test split was seen before",
+  "accessible_train_windows": 50,
+  "accessible_sample_id_min": 162,
+  "accessible_sample_id_max": 211,
+  "accessible_target_date_min": "2014-07",
+  "accessible_target_date_max": "2018-08",
+  "training_reference_ids_all_inside_closed_pool": true,
+  "validation_reference_ids_all_inside_closed_pool": true,
+  "test_reference_ids_all_inside_closed_pool": true,
+  "older_train_references_used": false,
+  "validation_or_test_labels_used_as_references": false,
+  "minimum_pair_gap_months": 12,
+  "legal_training_candidates": 378,
+  "legal_training_pair_targets": 27,
+  "selected_training_pairs": 118,
+  "selected_training_pair_targets": 27,
+  "closed_pool_windows_without_legal_earlier_reference": 23,
+  "delta_bin_thresholds": {
+    "q33": 0.0,
+    "q67": 0.4
+  },
+  "reference_strategy": "window_distance",
+  "k_validation_test": 10,
+  "feature_mode": "signed_diff",
+  "aggregation": "inverse_distance",
+  "selected_alpha_on_validation": 1.0,
+  "optical_reservoir": "fixed; colleague recent50 state cache reused",
+  "recent_state_cache_check": {
+    "train": {
+      "num_targets": 50,
+      "sample_id_min": 162,
+      "sample_id_max": 211,
+      "state_width": 50,
+      "max_abs_difference_from_base": 0.0
+    },
+    "val": {
+      "num_targets": 45,
+      "sample_id_min": 212,
+      "sample_id_max": 256,
+      "state_width": 50,
+      "max_abs_difference_from_base": 0.0
+    },
+    "test": {
+      "num_targets": 47,
+      "sample_id_min": 257,
+      "sample_id_max": 303,
+      "state_width": 50,
+      "max_abs_difference_from_base": 0.0
+    }
+  },
+  "ordinary_comparison_directory": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\results\\optical_reservoir_recent50_20260723"
+}
