@@ -9,7 +9,8 @@ plt.rcParams['axes.unicode_minus'] = False
 # ------------------------------
 # 1. 加载数据
 # ------------------------------
-data = pd.read_csv(DATA_PROCESSED_DIR / 'cpi_data_lastmonth=100.csv')
+data = pd.read_csv(DATA_PROCESSED_DIR / 'cpi_data_lastyear=100.csv')
+data = data.iloc[166:]
 ts = np.array(data['actual'])
 '''
 x_train = np.load(DATA_PROCESSED_DIR / 'cpi_seq_train.npy')
@@ -151,14 +152,14 @@ def cao_method(ts, tau, max_dim=10):
         m_opt = dims[np.argmin(np.abs(E1 - 1))]
     return dims, E1, m_opt
 
-#tau = 2
+tau = 1
 
-max_dim = 30
+max_dim = 20
 dims, E1, m = cao_method(ts, tau, max_dim)
 print(f"Cao 方法确定的嵌入维数 m = {m}")
 print(f"不同嵌入维数下的 E1 值: {dict(zip(dims, E1))}")
 
-#m=10
+m=13
 
 # 最终结果
 print(f"\n相空间重构参数: 延迟时间 τ = {tau}, 嵌入维数 m = {m}")
@@ -190,7 +191,8 @@ features_list = np.arange(m)
 #3 数据划分
 from sklearn.model_selection import train_test_split, RandomizedSearchCV, GridSearchCV
 from sklearn.preprocessing import StandardScaler
-x_train, x_test, y_train, y_test = train_test_split(features, targets, test_size=0.1, shuffle=False)
+x_train, x_test, y_train, y_test = train_test_split(features, targets, test_size=0.48, shuffle=False)
+#print(y_test)
 
 transfer = StandardScaler()
 x_train_standard = transfer.fit_transform(x_train)
@@ -210,6 +212,14 @@ def model_metrics(model_type, y_test, y_predict):
           f"{model_type}_MAPE:{(MAPE * 100):.3f}%, {model_type}_MASE:{(MASE * 100):.2f}%")
     return MAE, RMSE, MAPE, MASE
 
+def model_searchCV(model, grid, x_train, y_train, x_test):
+    model_searchCV = GridSearchCV(estimator=model, param_grid=grid, cv=3,
+                               scoring='neg_mean_squared_error', verbose=1, n_jobs=8)
+    model_searchCV.fit(x_train, y_train)
+    print(model_searchCV.best_params_)
+    model_predict = model_searchCV.predict(x_test)
+    return model_predict
+
 #4.1 naive模型
 naive_predict = np.roll(y_test, 1) # 简单用上期值预测当期
 naive_MAE = mean_absolute_error(y_test, naive_predict)
@@ -228,17 +238,10 @@ lr_train_predict = lr.predict(x_train)
 lr_predict = lr.predict(x_test)
 
 
-'''
-alpha=np.arange(2,3,0.001)
+alpha=np.arange(0.1,100,0.1)
 grid = {'alpha':alpha}
-#lr_searchCV = RandomizedSearchCV(estimator=svr, param_distributions=grid, cv=3,
-#                                n_iter=100, scoring='neg_mean_squared_error', verbose=2)
-lr_searchCV = GridSearchCV(estimator=lr, param_grid=grid, cv=3,
-                          scoring='neg_mean_squared_error', verbose=1, n_jobs=8)
-lr_searchCV.fit(x_train, y_train)
-print(lr_searchCV.best_params_)
-lr_predict = lr_searchCV.predict(x_test)
-'''
+lr_predict = model_searchCV(lr, grid, x_train, y_train, x_test)
+
 
 '''
 #lr = LinearRegression()
@@ -253,13 +256,7 @@ lr_predict = transfer.inverse_transform(lr_predict_standard.reshape(-1, 1)).rave
 '''
 alpha=np.arange(0.01,0.03,0.0001)
 grid = {'alpha':alpha}
-#lr_searchCV = RandomizedSearchCV(estimator=svr, param_distributions=grid, cv=3,
-#                                n_iter=100, scoring='neg_mean_squared_error', verbose=2)
-lr_searchCV = GridSearchCV(estimator=lr, param_grid=grid, cv=3,
-                          scoring='neg_mean_squared_error', verbose=1, n_jobs=8)
-lr_searchCV.fit(x_train_standard, y_train_standard)
-print(lr_searchCV.best_params_)
-lr_predict_standard = lr_searchCV.predict(x_test_standard)
+lr_predict_standard = model_searchCV(lr, grid, x_train_standard, y_train_standard, x_test_standard)
 lr_predict = transfer.inverse_transform(lr_predict_standard.reshape(-1, 1)).ravel()
 '''
 
@@ -268,25 +265,21 @@ lr_MAE, lr_RMSE, lr_MAPE, lr_MASE = model_metrics('lr', y_test, lr_predict)
 #4.3 随机森林模型
 from sklearn.ensemble import RandomForestRegressor
 
-rf = RandomForestRegressor(n_estimators=83, max_depth=12, min_samples_split=11,
-                           min_samples_leaf=2, max_features=0.7, random_state=42)
+rf = RandomForestRegressor(n_estimators=110, max_depth=7, min_samples_split=10,
+                           min_samples_leaf=1, max_features=0.65, random_state=42)
 rf.fit(x_train, y_train)
 
 rf_predict = rf.predict(x_test)
 
 '''
-n_estimators=np.arange(80,90,1)
-max_depth=[11,12,13]
-min_samples_split=[10,11,12]
-min_samples_leaf=[2,3]
-max_features=[0.7]  # 覆盖各种随机程度
+n_estimators=[105,110,115]
+max_depth=[6,7,8]
+min_samples_split=[9,10,11]
+min_samples_leaf=[1,2]
+max_features=[0.6,0.65,0.7]  # 覆盖各种随机程度
 grid = {'n_estimators':n_estimators, 'max_depth':max_depth, 'min_samples_split':min_samples_split,
         'min_samples_leaf':min_samples_leaf, 'max_features':max_features}
-rf_searchCV = GridSearchCV(estimator=rf, param_grid=grid, cv=3,
-                          scoring='neg_mean_squared_error', verbose=1, n_jobs=8)
-rf_searchCV.fit(x_train, y_train)
-print(rf_searchCV.best_params_)
-rf_predict = rf_searchCV.predict(x_test)
+rf_predict = model_searchCV(rf, grid, x_train, y_train, x_test)
 '''
 
 rf_MAE, rf_RMSE, rf_MAPE, rf_MASE = model_metrics('rf', y_test, rf_predict)
@@ -308,16 +301,11 @@ C = np.arange(300000,350000,1000)
 #gamma = [0.001, 0.01, 0.1, 1, 10]
 epsilon = np.arange(0.1,0.2,0.001)
 grid = {'C':C, 'epsilon':epsilon}
-
-svr_searchCV = GridSearchCV(estimator=svr, param_grid=grid, cv=3,
-                          scoring='neg_mean_squared_error', verbose=1, n_jobs=8)
-svr_searchCV.fit(x_train, y_train)
-print(svr_searchCV.best_params_)
-svr_predict = svr_searchCV.predict(x_test)
+svr_predict = model_searchCV(svr, grid, x_train, y_train, x_test)
 '''
 
 
-svr = SVR(kernel='rbf', gamma='scale', C=1.291, epsilon=0.637)
+svr = SVR(kernel='rbf', gamma='scale', C=1.68441, epsilon=0.000092)
 #model = KernelRidge(alpha=1.0, kernel='rbf', gamma=0.01)
 svr.fit(x_train_standard, y_train_standard)
 
@@ -326,16 +314,12 @@ svr_predict = transfer.inverse_transform(svr_predict_standard.reshape(-1, 1)).ra
 
 
 '''
-C = np.arange(1.28,1.3,0.001)
+C = np.arange(1.683,1.686,0.00001)
 #gamma = [0.001, 0.01, 0.1, 1, 10]
-epsilon = np.arange(0.63,0.65,0.001)
+epsilon = np.arange(0.00007,0.0001,0.000001)
 grid = {'C':C, 'epsilon':epsilon}
 
-svr_searchCV = GridSearchCV(estimator=svr, param_grid=grid, cv=3,
-                          scoring='neg_mean_squared_error', verbose=1, n_jobs=8)
-svr_searchCV.fit(x_train_standard, y_train_standard)
-print(svr_searchCV.best_params_)
-svr_predict_standard = svr_searchCV.predict(x_test_standard)
+svr_predict_standard = model_searchCV(svr, grid, x_train_standard, y_train_standard, x_test_standard)
 svr_predict = transfer.inverse_transform(svr_predict_standard.reshape(-1, 1)).ravel()
 '''
 
@@ -344,22 +328,18 @@ svr_MAE, svr_RMSE, svr_MAPE, svr_MASE = model_metrics('svr', y_test, svr_predict
 #4.5 XGBoost模型
 import xgboost as xgb
 
-xgb_model = xgb.XGBRegressor(max_depth=2, n_estimators=31, learning_rate=0.3249, random_state=42, objective='reg:squarederror')
+xgb_model = xgb.XGBRegressor(max_depth=3, n_estimators=550, learning_rate=0.0008, random_state=42, objective='reg:squarederror')
 xgb_model.fit(x_train, y_train)
 
 xgb_predict = xgb_model.predict(x_test)
 
 '''
-max_depth=[1,2,3]
-n_estimators=np.arange(25,35,1)
-learning_rate=[0.3249]
+max_depth=[2,3,4]
+n_estimators=np.arange(400,700,10)
+learning_rate=np.arange(0.0007,0.0009,0.00005)
 grid = {'max_depth':max_depth, 'n_estimators':n_estimators, 'learning_rate':learning_rate}
 
-xgb_searchCV = GridSearchCV(estimator=xgb_model, param_grid=grid, cv=3,
-                          scoring='neg_mean_squared_error', verbose=1, n_jobs=8)
-xgb_searchCV.fit(x_train, y_train)
-print(xgb_searchCV.best_params_)
-xgb_predict = xgb_searchCV.predict(x_test)
+xgb_predict = model_searchCV(xgb_model, grid, x_train, y_train, x_test)
 '''
 
 xgb_MAE, xgb_RMSE, xgb_MAPE, xgb_MASE = model_metrics('xgb', y_test, xgb_predict)
@@ -415,6 +395,58 @@ print("\n未来12个月预测结果：")
 print(forecast_df.round(2))
 '''
 
+'''
+#4.7 将环比预测值换算为同比（上年同月=100）
+# 读取完整环比序列
+hist_mom = pd.read_csv(DATA_PROCESSED_DIR / 'cpi_data_lastmonth=100.csv')['actual'].values[:-1]  #去掉最后1行
+hist_yoy = pd.read_csv(DATA_PROCESSED_DIR / 'cpi_data_lastyear=100.csv')['actual'].values
+test_start_mom = len(hist_mom) - len(y_test)
+test_start_yoy = len(hist_yoy) - len(y_test)
+
+def to_yoy(pred_mom):
+    """
+    利用【上个月真实同比 + 本月预测环比 + 去年同月实际环比】递推预测同比
+
+    参数:
+        pred_mom : ndarray, 模型预测的环比序列 (上月=100)
+        hist_mom : ndarray, 完整的历史环比序列 (上月=100)
+        hist_yoy : ndarray, 完整的历史同比序列 (上年同月=100)
+        test_start: int, 预测起点在历史序列中的索引
+                    (要求 test_start >= 1, 且 test_start-12 >= 0)
+    返回:
+        pred_yoy : ndarray, 预测的同比序列 (上年同月=100)
+    """
+    n = len(pred_mom)
+    pred_yoy = np.empty(n, dtype=float)
+
+    for i in range(n):
+        idx_mom = test_start_mom + i  # 当前预测月份在历史数组中的绝对位置
+        idx_yoy = test_start_yoy + i
+
+        prev_yoy = hist_yoy[idx_yoy - 1]
+        mom_last_year = hist_mom[idx_mom - 12]
+        pred_yoy[i] = prev_yoy * (pred_mom[i] / mom_last_year)
+    return pred_yoy
+
+# 对各模型预测值进行换算
+y_test = to_yoy(y_test)
+naive_predict = np.roll(y_test, 1)
+naive_MAE = mean_absolute_error(y_test, naive_predict)
+lr_predict = to_yoy(lr_predict)
+rf_predict = to_yoy(rf_predict)
+svr_predict = to_yoy(svr_predict)
+xgb_predict = to_yoy(xgb_predict)
+forecast_mean = to_yoy(np.array(forecast_mean))
+
+# 重新计算各项指标（基于同比值）
+naive_MAE, naive_RMSE, naive_MAPE, naive_MASE = model_metrics('naive', y_test, naive_predict)
+lr_MAE, lr_RMSE, lr_MAPE, lr_MASE = model_metrics('lr', y_test, lr_predict)
+rf_MAE, rf_RMSE, rf_MAPE, rf_MASE = model_metrics('rf', y_test, rf_predict)
+svr_MAE, svr_RMSE, svr_MAPE, svr_MASE = model_metrics('svr', y_test, svr_predict)
+xgb_MAE, xgb_RMSE, xgb_MAPE, xgb_MASE = model_metrics('xgb', y_test, xgb_predict)
+sarimax_MAE, sarimax_RMSE, sarimax_MAPE, sarimax_MASE = model_metrics('sarimax', y_test, forecast_mean)
+'''
+
 #5 特征重要性可视化
 #5.1 随机森林模型
 # 获取特征重要性（默认基于不纯度减少的 MDI 值）
@@ -457,6 +489,8 @@ print(importance_df)
 
 plt.figure(figsize=(10, 6))
 plt.barh(importance_df['Feature'], importance_df['Importance'])
+
+
 plt.gca().invert_yaxis()
 
 for i, v in enumerate(importance_df['Importance']):
@@ -471,58 +505,47 @@ plt.show()
 #plt.show()
 
 #6 各模型预测值与实际值可视化
-x_seq = np.arange(len(y_test))
+import matplotlib.dates as mdates
 
-fig, axes = plt.subplots(1, 6, figsize=(18, 5))
+date = pd.to_datetime(data[['year', 'month']].assign(day=1))
+y_test_len = len(y_test)
+date = date.tail(y_test_len)
 
-# 子图1: Naive模型
-axes[0].plot(x_seq, y_test, label='Actual', color='blue', lw=1.5)
-axes[0].plot(x_seq, naive_predict, label='Predicted', color='red', lw=1.5, alpha=0.7)
-axes[0].set_xlabel('Sequence')
-axes[0].set_ylabel('CPI')
-axes[0].set_title('Naive Model')
-axes[0].legend()
+interval = 1
+start = date.min().replace(day=1)
+end = date.max().replace(day=1)
+xticks_dates = pd.date_range(start=start, end=end, freq=f'{interval}MS')
 
-# 子图2: 线性回归模型
-axes[1].plot(x_seq, y_test, label='Actual', color='blue', lw=1.5)
-axes[1].plot(x_seq, lr_predict, label='Predicted', color='red', lw=1.5, alpha=0.7)
-axes[1].set_xlabel('Sequence')
-axes[1].set_ylabel('CPI')
-axes[1].set_title('Linear Regression')
-axes[1].legend()
+# 定义模型列表
+models = [
+    ('Naive', naive_predict),
+    ('Linear Regression', lr_predict),
+    ('Random Forest', rf_predict),
+    ('SVR', svr_predict),
+    ('XGBoost', xgb_predict),
+    ('SARIMAX', forecast_mean)
+]
 
-# 子图3: 随机森林模型
-axes[2].plot(x_seq, y_test, label='Actual', color='blue', lw=1.5)
-axes[2].plot(x_seq, rf_predict, label='Predicted', color='red', lw=1.5, alpha=0.7)
-axes[2].set_xlabel('Sequence')
-axes[2].set_ylabel('CPI')
-axes[2].set_title('Random Forest')
-axes[2].legend()
+fig, axes = plt.subplots(3, 2, figsize=(24, 12))
 
-# 子图4: 支持向量机模型
-axes[3].plot(x_seq, y_test, label='Actual', color='blue', lw=1.5)
-axes[3].plot(x_seq, svr_predict, label='Predicted', color='red', lw=1.5, alpha=0.7)
-axes[3].set_xlabel('Sequence')
-axes[3].set_ylabel('CPI')
-axes[3].set_title('SVR')
-axes[3].legend()
+for idx, (name, pred) in enumerate(models):
+    row = idx // 2
+    col = idx % 2
+    ax = axes[row, col]
+    ax.plot(date, y_test, label='Actual', color='blue', lw=1.5)
+    ax.plot(date, pred, label='Predicted', color='red', lw=1.5, alpha=0.7)
+    ax.set_title(f'{name} Model')
+    ax.legend()
+    ax.set_xlabel('Date')
+    ax.set_ylabel('CPI')
 
-# 子图5: XGBoost模型
-axes[4].plot(x_seq, y_test, label='Actual', color='blue', lw=1.5)
-axes[4].plot(x_seq, xgb_predict, label='Predicted', color='red', lw=1.5, alpha=0.7)
-axes[4].set_xlabel('Sequence')
-axes[4].set_ylabel('CPI')
-axes[4].set_title('XGBoost')
-axes[4].legend()
+for ax in axes.flat:
+    ax.margins(x=0.05)
+    ax.set_xticks(xticks_dates)
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
+    ax.grid(True, alpha=0.3, linestyle='--')
 
-# 子图6: SARIMAX模型
-axes[5].plot(x_seq, y_test, label='Actual', color='blue', lw=1.5)
-axes[5].plot(x_seq, forecast_mean, label='Predicted', color='red', lw=1.5, alpha=0.7)
-axes[5].set_xlabel('Sequence')
-axes[5].set_ylabel('CPI')
-axes[5].set_title('SARIMAX')
-axes[5].legend()
-
+fig.autofmt_xdate(rotation=60)
 plt.tight_layout()
 plt.show()
 
@@ -536,15 +559,15 @@ residuals_dict = {
     'SARIMAX': y_test - forecast_mean
 }
 
-fig, axes = plt.subplots(2, 3, figsize=(15, 8))
+fig, axes = plt.subplots(3, 2, figsize=(24, 12))
 axes = axes.flatten()
 
 for idx, (model_name, residuals) in enumerate(residuals_dict.items()):
     ax = axes[idx]
-    ax.plot(range(len(residuals)), residuals, marker='o', linestyle='-', color='darkorange', markersize=4, linewidth=1)
+    ax.plot(date, residuals, marker='o', linestyle='-', color='darkorange', markersize=4, linewidth=1)
     ax.axhline(y=0, color='black', linestyle='--', linewidth=0.8, alpha=0.6)  # 参考零线
     ax.set_title(f'{model_name} 残差', fontsize=12)
-    ax.set_xlabel('测试集序列号')
+    ax.set_xlabel('日期')
     ax.set_ylabel('残差 (实际 - 预测)')
     ax.grid(True, linestyle=':', alpha=0.6)
     # 显示残差基本统计量
@@ -553,6 +576,12 @@ for idx, (model_name, residuals) in enumerate(residuals_dict.items()):
     ax.text(0.02, 0.95, f'均值: {mean_res:.4f}\n标准差: {std_res:.4f}',
             transform=ax.transAxes, verticalalignment='top',
             bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+
+for ax in axes:
+    ax.margins(x=0.05)
+    ax.set_xticks(xticks_dates)
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
+    plt.setp(ax.get_xticklabels(), rotation=60, ha='right')
 
 plt.tight_layout()
 plt.show()
@@ -633,3 +662,20 @@ plt.show()
 print("\n各模型趋势预测准确率：")
 for name, acc in trend_accuracy.items():
     print(f"{name}: {acc:.2f}%")
+
+# 10. 生成预测结果对比表格（同比值）
+results_df = pd.DataFrame({
+    'actual': y_test,
+    'Naive': naive_predict,
+    'Ridge': lr_predict,
+    'RandomForest': rf_predict,
+    'SVR': svr_predict,
+    'XGBoost': xgb_predict,
+    'SARIMAX': forecast_mean
+})
+
+#print("\n各模型预测值对比（同比，上年同月=100）：")
+#print(results_df.round(2))
+
+# 可选：保存为CSV
+#results_df.to_csv(TABLE_DIR / "baseline_predictions.csv", index=False)

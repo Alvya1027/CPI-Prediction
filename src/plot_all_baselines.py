@@ -1,3 +1,4 @@
+from config import TABLES_DIR, FIGURES_DIR
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -5,8 +6,8 @@ from pathlib import Path
 # =========================
 # 路径设置
 # =========================
-TABLE_DIR = Path("results/tables")
-FIG_DIR = Path("results/figures")
+TABLE_DIR = TABLES_DIR
+FIG_DIR = FIGURES_DIR
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 
 # =========================
