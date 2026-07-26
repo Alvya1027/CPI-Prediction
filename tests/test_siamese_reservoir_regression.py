@@ -38,6 +38,12 @@ class SiameseReservoirRegressionTest(unittest.TestCase):
         features = build_pair_features(pairs, states, "signed_diff")
         np.testing.assert_allclose(features, [[2.0, -3.0]])
 
+    def test_target_plus_difference_feature_has_expected_order(self) -> None:
+        pairs = pd.DataFrame({"sample_i_id": [1], "sample_j_id": [2]})
+        states = {1: np.asarray([3.0, 1.0]), 2: np.asarray([1.0, 4.0])}
+        features = build_pair_features(pairs, states, "target_plus_diff")
+        np.testing.assert_allclose(features, [[3.0, 1.0, 2.0, -3.0]])
+
     def test_end_to_end_pipeline_covers_all_test_targets(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

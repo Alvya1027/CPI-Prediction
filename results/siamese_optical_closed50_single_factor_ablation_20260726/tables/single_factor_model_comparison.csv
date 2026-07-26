@@ -1,0 +1,5 @@
+configuration,changed_factor,gap_months,reference_mode,feature_mode,feature_dimension,legal_train_candidates,train_pair_targets,selected_train_pairs,selected_alpha,val_mae,val_rmse,aggregation,test_mae,test_rmse,val_rmse_change_vs_baseline,test_rmse_change_vs_baseline,test_rmse_change_percent_vs_baseline
+baseline,none,12,shape,signed_diff,50,378,27,118,1.0,0.5163371469757133,0.6967380644573966,inverse_distance,0.7999780637615053,0.8863711431351415,0.0,0.0,0.0
+only_gap,gap_months,12,shape,signed_diff,50,378,27,118,1.0,0.5163371469757133,0.6967380644573966,inverse_distance,0.7999780637615053,0.8863711431351415,0.0,0.0,0.0
+only_hybrid_distance,reference_mode,12,hybrid,signed_diff,50,378,27,118,1.0,0.5501409994253408,0.7415362673188284,inverse_hybrid_distance,0.8456614672576739,0.9338885237343935,0.04479820286143177,0.047517380599251924,5.360889844764174
+only_100d_feature,feature_mode,12,shape,target_plus_diff,100,378,27,118,10.0,0.6985373258890241,0.9265942597534164,inverse_distance,1.2349657767555375,1.3537827094334611,0.22985619529601975,0.4674115662983196,52.73316600144046
