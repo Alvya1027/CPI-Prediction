@@ -27,7 +27,7 @@ actual_col = "cpi_actual"
 ordinary_full_col = "cpi_predicted_ordinary_full"
 ordinary_matched_col = "cpi_predicted_ordinary_matched"
 siamese_col = "cpi_predicted_siamese"
-svr_col = "SVR"
+rf_col = "RandomForest"
 ridge_col = "Ridge"
 
 # 储备池全部数据（47个样本）
@@ -37,14 +37,14 @@ ordinary_full_pred = final_test_df[ordinary_full_col].values
 ordinary_matched_pred = final_test_df[ordinary_matched_col].values
 siamese_pred = final_test_df[siamese_col].values
 
-# 共同样本数（用于SVR和Ridge）
+# 共同样本数（用于RF和Ridge）
 n_common = min(len(final_test_df), len(baseline_df))
 print(f"[INFO] 共同样本数: {n_common}")
 
 # 基线数据（取共同样本）
 actual_common = final_test_df[actual_col].iloc[:n_common].values
 dates_common = final_test_df[date_col].iloc[:n_common].values
-svr_pred = baseline_df[svr_col].iloc[:n_common].values
+rf_pred = baseline_df[rf_col].iloc[:n_common].values
 ridge_pred = baseline_df[ridge_col].iloc[:n_common].values
 
 # =========================
@@ -119,8 +119,8 @@ metrics_list.append(compute_metrics(actual_full, siamese_pred, dates_full,
 
 # 基线模型：使用共同样本（47个）
 if n_common > 0:
-    metrics_list.append(compute_metrics(actual_common, svr_pred, dates_common,
-                                        "SVR", n_common))
+    metrics_list.append(compute_metrics(actual_common, rf_pred, dates_common,
+                                        "RF", n_common))
     metrics_list.append(compute_metrics(actual_common, ridge_pred, dates_common,
                                         "Ridge", n_common))
 
@@ -192,13 +192,13 @@ if n_common > 0:
     plot_df = pd.DataFrame({
         "date": dates_common,
         "actual": actual_common,
-        "SVR": svr_pred,
+        "RF": rf_pred,
         "Ridge": ridge_pred,
         "Ordinary_Full_212": ordinary_full_pred[:n_common],
         "Ordinary_Matched_189": ordinary_matched_pred[:n_common],
         "Siamese_189": siamese_pred[:n_common]
     })
-    model_names_plot = ["SVR", "Ridge", "Ordinary_Full_212", "Ordinary_Matched_189", "Siamese_189"]
+    model_names_plot = ["RF", "Ridge", "Ordinary_Full_212", "Ordinary_Matched_189", "Siamese_189"]
 else:
     plot_df = pd.DataFrame({
         "date": dates_full,
@@ -280,4 +280,4 @@ if len(radar_df) > 0:
 
 print("\n所有高级分析图表已生成并保存至 results/figures/")
 print("指标表已保存至 results/tables/advanced_metrics_final.csv")
-print("注意：储备池指标基于全部47个测试样本，SVR/Ridge基于共同样本（47个）。")
+print("注意：储备池指标基于全部47个测试样本，RF/Ridge基于共同样本（47个）。")
