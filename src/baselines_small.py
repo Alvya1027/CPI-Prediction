@@ -321,6 +321,7 @@ xgb_param_dist = {
 xgb_val_predict, xgb_test_predict = model_searchCV('random', xgb_model, xgb_param_dist, x_train, y_train, x_val, x_test)
 '''
 
+
 #4.9 数据同比换算（上年同月=100）
 # 计算测试集和验证集在历史数据中的起始位置
 hist_yoy = pd.read_csv(DATA_PROCESSED_DIR / 'cpi_data_lastyear=100.csv')['actual'].values
@@ -385,6 +386,7 @@ rf_test_predict = to_yoy(rf_test_predict)
 svr_test_predict = to_yoy(svr_test_predict)
 xgb_test_predict = to_yoy(xgb_test_predict)
 sarimax_test_predict = to_yoy(sarimax_test_predict)
+
 
 #4.10 计算模型各项误差指标
 from sklearn.metrics import mean_absolute_error, root_mean_squared_error, mean_absolute_percentage_error
@@ -509,7 +511,7 @@ for idx, (name, pred) in enumerate(models_test):
     ax.set_title(name)
     ax.legend()
     ax.set_xlabel('Date')
-    ax.set_ylabel('CPI (YoY)')
+    ax.set_ylabel('CPI (MoM)')
 
 for ax in axes.flat:
     ax.margins(x=0.05)
