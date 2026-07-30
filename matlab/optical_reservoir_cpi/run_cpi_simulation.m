@@ -1,4 +1,4 @@
-function response_file = run_cpi_simulation(split)
+function response_file = run_cpi_simulation(split, config)
 %RUN_CPI_SIMULATION Run the copied optical reservoir model for one split.
 
 if nargin < 1
@@ -9,7 +9,9 @@ valid_splits = {'train', 'val', 'test'};
 assert(any(strcmp(split, valid_splits)), ...
     'split must be train, val, or test.');
 
-config = config_cpi_rc();
+if nargin < 2 || isempty(config)
+    config = config_cpi_rc();
+end
 input_file = fullfile(config.input_dir, sprintf('simin_%s.mat', split));
 assert(exist(input_file, 'file') == 2, ...
     'Input file not found. Run prepare_cpi_inputs first.');

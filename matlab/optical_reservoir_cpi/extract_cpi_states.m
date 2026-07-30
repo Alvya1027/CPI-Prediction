@@ -1,4 +1,4 @@
-function state_file = extract_cpi_states(split)
+function state_file = extract_cpi_states(split, config)
 %EXTRACT_CPI_STATES Convert a logged response into one 50-node state per sample.
 
 if nargin < 1
@@ -9,7 +9,9 @@ valid_splits = {'train', 'val', 'test'};
 assert(any(strcmp(split, valid_splits)), ...
     'split must be train, val, or test.');
 
-config = config_cpi_rc();
+if nargin < 2 || isempty(config)
+    config = config_cpi_rc();
+end
 input_file = fullfile(config.input_dir, sprintf('simin_%s.mat', split));
 response_file = fullfile(config.response_dir, sprintf('response_%s.mat', split));
 assert(exist(input_file, 'file') == 2, 'Missing input file: %s', input_file);

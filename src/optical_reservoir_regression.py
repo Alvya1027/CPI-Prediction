@@ -30,9 +30,12 @@ class OpticalReadout:
     model: Ridge
 
 
-def load_state_splits(state_dir: Path) -> dict[str, pd.DataFrame]:
+def load_state_splits(
+    state_dir: Path,
+    sample_index_path: Path = DATA_PROCESSED_DIR / "sample_index.csv",
+) -> dict[str, pd.DataFrame]:
     """Load fixed reservoir states and align them with the shared sample index."""
-    sample_index = pd.read_csv(DATA_PROCESSED_DIR / "sample_index.csv")
+    sample_index = pd.read_csv(sample_index_path)
     outputs: dict[str, pd.DataFrame] = {}
 
     for split in SPLITS:
@@ -156,8 +159,9 @@ def run_training(
     state_dir: Path = DEFAULT_STATE_DIR,
     output_dir: Path = RESULTS_DIR,
     alphas: Iterable[float] = DEFAULT_ALPHAS,
+    sample_index_path: Path = DATA_PROCESSED_DIR / "sample_index.csv",
 ) -> pd.DataFrame:
-    splits = load_state_splits(state_dir)
+    splits = load_state_splits(state_dir, sample_index_path=sample_index_path)
     train = splits["train"]
     val = splits["val"]
     bundle, trials = select_alpha(

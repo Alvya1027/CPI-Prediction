@@ -1,0 +1,12 @@
+{
+  "task": "ordinary optical reservoir direct CPI regression",
+  "selected_alpha": 100.0,
+  "reservoir_training": "fixed; only the Ridge readout is trained",
+  "experiment": "ordinary_optical_reservoir_mom_recent50",
+  "created_at": "2026-07-30T21:27:00.275087+08:00",
+  "target_scale": "CPI MoM index (previous month=100)",
+  "split_definition": "train 2014-07..2018-08 (50), val 2018-09..2022-05 (45), test 2022-06..2026-04 (47)",
+  "state_dir": "D:\\个人\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi_mom_recent50_20260730\\states",
+  "sample_index": "D:\\个人\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi_mom_recent50_20260730\\data\\sample_index.csv",
+  "output_dir": "D:\\个人\\GitHub\\CPI-Prediction\\results\\optical_reservoir_mom_recent50_20260730"
+}

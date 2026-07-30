@@ -1,7 +1,9 @@
-function summary = prepare_cpi_inputs()
+function summary = prepare_cpi_inputs(config)
 %PREPARE_CPI_INPUTS Build fixed-mask Simulink inputs for all CPI splits.
 
-config = config_cpi_rc();
+if nargin < 1 || isempty(config)
+    config = config_cpi_rc();
+end
 data = load(config.data_file);
 
 assert(double(data.window_size) == config.window_size, ...
