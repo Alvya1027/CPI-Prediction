@@ -1,0 +1,84 @@
+{
+  "experiment": "strict closed50 single-factor ablation",
+  "evaluation_status": "exploratory re-analysis; test was seen before",
+  "baseline": {
+    "name": "baseline",
+    "changed_factor": "none",
+    "gap_months": 12,
+    "reference_mode": "shape",
+    "feature_mode": "signed_diff"
+  },
+  "only_gap_validation_grid": [
+    1,
+    3,
+    6,
+    12
+  ],
+  "selected_gap_on_validation": 12,
+  "final_configurations": [
+    {
+      "name": "baseline",
+      "changed_factor": "none",
+      "gap_months": 12,
+      "reference_mode": "shape",
+      "feature_mode": "signed_diff"
+    },
+    {
+      "name": "only_gap",
+      "changed_factor": "gap_months",
+      "gap_months": 12,
+      "reference_mode": "shape",
+      "feature_mode": "signed_diff"
+    },
+    {
+      "name": "only_hybrid_distance",
+      "changed_factor": "reference_mode",
+      "gap_months": 12,
+      "reference_mode": "hybrid",
+      "feature_mode": "signed_diff"
+    },
+    {
+      "name": "only_100d_feature",
+      "changed_factor": "feature_mode",
+      "gap_months": 12,
+      "reference_mode": "shape",
+      "feature_mode": "target_plus_diff"
+    }
+  ],
+  "isolation_rule": "each ablation differs from baseline in exactly one conceptual factor",
+  "accessible_train_windows": 50,
+  "accessible_sample_id_min": 162,
+  "accessible_sample_id_max": 211,
+  "k_validation_test": 10,
+  "all_test_reference_ids_inside_closed50": true,
+  "validation_or_test_labels_used_for_reference_selection": false,
+  "test_loaded_after_validation_configuration_freeze": true,
+  "hybrid_distance_weights": {
+    "shape": 0.5,
+    "absolute_level": 0.5
+  },
+  "state_cache_check": {
+    "train": {
+      "num_targets": 50,
+      "sample_id_min": 162,
+      "sample_id_max": 211,
+      "state_width": 50,
+      "max_abs_difference_from_base": 0.0
+    },
+    "val": {
+      "num_targets": 45,
+      "sample_id_min": 212,
+      "sample_id_max": 256,
+      "state_width": 50,
+      "max_abs_difference_from_base": 0.0
+    },
+    "test": {
+      "num_targets": 47,
+      "sample_id_min": 257,
+      "sample_id_max": 303,
+      "state_width": 50,
+      "max_abs_difference_from_base": 0.0
+    }
+  },
+  "ordinary_recent50_context_directory": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\results\\optical_reservoir_recent50_20260723"
+}

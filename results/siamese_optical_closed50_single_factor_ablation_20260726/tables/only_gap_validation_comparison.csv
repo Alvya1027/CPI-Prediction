@@ -1,0 +1,5 @@
+configuration,changed_factor,gap_months,reference_mode,feature_mode,feature_dimension,legal_train_candidates,train_pair_targets,selected_train_pairs,selected_alpha,val_mae,val_rmse
+only_gap_1,gap_months,1,shape,signed_diff,50,741,38,173,10.0,0.5749939357963131,0.7688897287252496
+only_gap_3,gap_months,3,shape,signed_diff,50,666,36,165,10.0,0.5998988861200423,0.790288024930728
+only_gap_6,gap_months,6,shape,signed_diff,50,561,33,150,10.0,0.5868007915054279,0.781839690528042
+only_gap_12,gap_months,12,shape,signed_diff,50,378,27,118,1.0,0.5163371469757133,0.6967380644573966

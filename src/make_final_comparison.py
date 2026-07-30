@@ -1,9 +1,10 @@
+from config import TABLES_DIR
 import pandas as pd
 import os
 
 
 # 路径
-table_dir = "results/tables"
+table_dir = TABLES_DIR
 
 
 # ======================

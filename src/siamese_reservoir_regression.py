@@ -120,6 +120,8 @@ def build_pair_features(
         return np.hstack([signed_diff, np.abs(signed_diff)])
     if feature_mode == "concat":
         return np.hstack([h_i, h_j])
+    if feature_mode == "target_plus_diff":
+        return np.hstack([h_i, signed_diff])
     raise ValueError(f"Unknown feature_mode: {feature_mode}")
 
 
@@ -151,6 +153,14 @@ def aggregate_target_predictions(
             if "window_distance" not in group.columns:
                 raise ValueError("inverse_distance aggregation needs window_distance")
             distances = group["window_distance"].to_numpy(dtype=float)
+            weights = 1.0 / np.maximum(distances, 1e-6)
+            predicted = float(np.average(estimates, weights=weights))
+        elif aggregation == "inverse_hybrid_distance":
+            if "hybrid_distance" not in group.columns:
+                raise ValueError(
+                    "inverse_hybrid_distance aggregation needs hybrid_distance"
+                )
+            distances = group["hybrid_distance"].to_numpy(dtype=float)
             weights = 1.0 / np.maximum(distances, 1e-6)
             predicted = float(np.average(estimates, weights=weights))
         else:
@@ -365,11 +375,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, default=RESULTS_DIR)
     parser.add_argument(
         "--feature-mode",
-        choices=("signed_diff", "signed_abs", "concat"),
+        choices=("signed_diff", "signed_abs", "concat", "target_plus_diff"),
         default="signed_diff",
     )
     parser.add_argument(
-        "--aggregation", choices=("mean", "inverse_distance"), default="mean"
+        "--aggregation",
+        choices=("mean", "inverse_distance", "inverse_hybrid_distance"),
+        default="mean",
     )
     return parser.parse_args()
 

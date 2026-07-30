@@ -1,0 +1,100 @@
+{
+  "experiment": "SSA optimization of Siamese-only closed50 parameters",
+  "evaluation_status": "exploratory re-analysis; test was seen before",
+  "frozen_optical_reservoir": true,
+  "frozen_state_directory": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\results\\optical_reservoir_recent50_20260723\\input_states_recent50",
+  "reservoir_parameters_changed": false,
+  "feature_mode": "signed_diff_50d_fixed",
+  "optimized_parameters": [
+    "gap_months",
+    "k_references",
+    "level_weight",
+    "distance_power",
+    "max_pairs_per_bin"
+  ],
+  "search_bounds": {
+    "gap_months": [
+      1,
+      3,
+      6,
+      12
+    ],
+    "k_references": [
+      1,
+      15
+    ],
+    "level_weight": [
+      0.0,
+      0.4
+    ],
+    "distance_power": [
+      0.5,
+      3.0
+    ],
+    "max_pairs_per_bin": [
+      1,
+      5
+    ]
+  },
+  "baseline_inserted_into_each_population": true,
+  "baseline_configuration": {
+    "gap_months": 12,
+    "k_references": 10,
+    "level_weight": 0.0,
+    "distance_power": 1.0,
+    "max_pairs_per_bin": 2
+  },
+  "ssa": {
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "population_size": 12,
+    "iterations": 12,
+    "producer_ratio": 0.2,
+    "awareness_ratio": 0.2,
+    "safety_threshold": 0.8,
+    "unique_evaluations": 336
+  },
+  "fitness": "validation RMSE + 0.10 * std(RMSE over three chronological validation blocks)",
+  "ridge_alpha_rule": "same validation RMSE grid selection as frozen Siamese baseline; alpha is not an SSA parameter",
+  "selected_configuration": {
+    "gap_months": 12,
+    "k_references": 8,
+    "level_weight": 0.0,
+    "distance_power": 0.604,
+    "max_pairs_per_bin": 2
+  },
+  "selected_shape_weight": 1.0,
+  "selected_alpha": 1.0,
+  "accessible_train_windows": 50,
+  "accessible_sample_id_min": 162,
+  "accessible_sample_id_max": 211,
+  "all_selected_references_inside_closed50": true,
+  "validation_or_test_labels_used_for_reference_selection": false,
+  "test_loaded_after_ssa_search_and_configuration_freeze": true,
+  "state_cache_check": {
+    "train": {
+      "num_targets": 50,
+      "sample_id_min": 162,
+      "sample_id_max": 211,
+      "state_width": 50,
+      "max_abs_difference_from_base": 0.0
+    },
+    "val": {
+      "num_targets": 45,
+      "sample_id_min": 212,
+      "sample_id_max": 256,
+      "state_width": 50,
+      "max_abs_difference_from_base": 0.0
+    },
+    "test": {
+      "num_targets": 47,
+      "sample_id_min": 257,
+      "sample_id_max": 303,
+      "state_width": 50,
+      "max_abs_difference_from_base": 0.0
+    }
+  }
+}
