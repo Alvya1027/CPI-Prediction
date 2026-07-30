@@ -254,6 +254,9 @@ $$\text{MASE} = \frac{\text{MAE}}{\text{MAE}_{\text{Naive}}}$$
 - `src/phase_space_reconstruction.py` — 相空间重构（延迟时间与嵌入维数计算）
 - `data_processed/cpi_data_lastmonth=100.csv` — 经相空间重构后用于建模的特征数据
 - `src/baselines_small.py` — 基线模型训练、评估与可视化代码
-- `results/baselines` — 各模型结果可视化图片
-- `results/tables/baseline_results.csv` — 各模型评估指标结果
-- `results/tables/baseline_predictions.csv` — 各模型在测试集上的具体预测值
+- `results/baselines` — 各模型结果（同比）可视化图片
+- `results/tables/baseline_results.csv` — 各模型评估指标（同比）结果
+- `results/tables/baseline_predictions.csv` — 各模型在测试集上（同比）的具体预测值
+- `results/baselines_mom` — 各模型结果（环比）可视化图片
+- `results/tables/baseline_results_mom.csv` — 各模型评估指标（环比）结果
+- `results/tables/baseline_predictions_mom.csv` — 各模型在测试集上（环比）的具体预测值
