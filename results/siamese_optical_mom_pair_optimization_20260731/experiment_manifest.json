@@ -1,0 +1,91 @@
+{
+  "experiment": "MoM strict-closed50 Siamese pair-structure optimization",
+  "created_at": "2026-07-31T00:48:19.850400+08:00",
+  "evaluation_status": "exploratory: the repository's 47-month test result had already been observed before this structural experiment",
+  "profile_audit": {
+    "status": "passed",
+    "target_scale": "CPI MoM index (previous month=100)",
+    "window_size": 12,
+    "source_sequence_verified": true,
+    "state_width": 50,
+    "shared_mask": true,
+    "splits": {
+      "train": {
+        "num_targets": 50,
+        "first_target_date": "2014-07",
+        "last_target_date": "2018-08",
+        "state_shape": [
+          50,
+          50
+        ]
+      },
+      "val": {
+        "num_targets": 45,
+        "first_target_date": "2018-09",
+        "last_target_date": "2022-05",
+        "state_shape": [
+          45,
+          50
+        ]
+      },
+      "test": {
+        "num_targets": 47,
+        "first_target_date": "2022-06",
+        "last_target_date": "2026-04",
+        "state_shape": [
+          47,
+          50
+        ]
+      }
+    },
+    "closed_train_sample_ids": [
+      0,
+      49
+    ]
+  },
+  "frozen_optical_reservoir": true,
+  "reservoir_parameters_changed": false,
+  "accessible_train_windows": 50,
+  "searched_siamese_only_factors": {
+    "target_gap_months": [
+      1,
+      3,
+      6,
+      12
+    ],
+    "training_modes": [
+      "sampled",
+      "balanced",
+      "antisymmetric"
+    ]
+  },
+  "fixed_parameters_from_previous_validation_search": {
+    "k_references": 5,
+    "level_weight": 0.041,
+    "distance_power": 0.654,
+    "feature_mode": "signed_diff_50d"
+  },
+  "selected_configuration": {
+    "target_gap_months": 12,
+    "training_mode": "antisymmetric",
+    "k_references": 5,
+    "level_weight": 0.041,
+    "distance_power": 0.654
+  },
+  "selected_alpha": 1000.0,
+  "selected_aggregation": "trimmed_mean",
+  "candidate_train_pairs": 741,
+  "selected_train_rows": 1482,
+  "causal_train_pair_targets": 38,
+  "validation_pairs": 225,
+  "test_pairs": 235,
+  "all_validation_test_references_inside_train50": true,
+  "validation_or_test_labels_used_for_reference_selection": false,
+  "test_loaded_after_configuration_freeze": true,
+  "pair_optimized_validation_mae": 0.30974921890925866,
+  "pair_optimized_validation_rmse": 0.4069299371281911,
+  "pair_optimized_test_mae": 0.31975297930071817,
+  "pair_optimized_test_rmse": 0.422208615773551,
+  "test_rmse_change_percent_vs_ordinary": 6.299219147780288,
+  "test_rmse_change_percent_vs_current_ssa": 5.5147353010597255
+}

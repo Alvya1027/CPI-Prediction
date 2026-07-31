@@ -1,0 +1,98 @@
+{
+  "experiment": "MoM strict-closed50 Siamese optical reservoir with SSA",
+  "created_at": "2026-07-30T23:30:30.019323+08:00",
+  "evaluation_status": "fresh MoM evaluation; validation selected, test evaluated once",
+  "profile_audit": {
+    "status": "passed",
+    "target_scale": "CPI MoM index (previous month=100)",
+    "window_size": 12,
+    "source_sequence_verified": true,
+    "state_width": 50,
+    "shared_mask": true,
+    "splits": {
+      "train": {
+        "num_targets": 50,
+        "first_target_date": "2014-07",
+        "last_target_date": "2018-08",
+        "state_shape": [
+          50,
+          50
+        ]
+      },
+      "val": {
+        "num_targets": 45,
+        "first_target_date": "2018-09",
+        "last_target_date": "2022-05",
+        "state_shape": [
+          45,
+          50
+        ]
+      },
+      "test": {
+        "num_targets": 47,
+        "first_target_date": "2022-06",
+        "last_target_date": "2026-04",
+        "state_shape": [
+          47,
+          50
+        ]
+      }
+    },
+    "closed_train_sample_ids": [
+      0,
+      49
+    ]
+  },
+  "frozen_optical_reservoir": true,
+  "reservoir_parameters_changed": false,
+  "state_directory": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi_mom_recent50_20260730\\states",
+  "data_directory": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi_mom_recent50_20260730\\data",
+  "accessible_train_windows": 50,
+  "validation_targets": 45,
+  "test_targets": 47,
+  "baseline_configuration": {
+    "gap_months": 12,
+    "k_references": 10,
+    "level_weight": 0.0,
+    "distance_power": 1.0,
+    "max_pairs_per_bin": 2
+  },
+  "selected_configuration": {
+    "gap_months": 1,
+    "k_references": 5,
+    "level_weight": 0.041,
+    "distance_power": 0.654,
+    "max_pairs_per_bin": 1
+  },
+  "selected_shape_weight": 0.959,
+  "selected_alpha": 100.0,
+  "optimized_parameters": [
+    "gap_months",
+    "k_references",
+    "level_weight",
+    "distance_power",
+    "max_pairs_per_bin"
+  ],
+  "feature_mode": "signed_diff_50d_fixed",
+  "fitness": "validation RMSE + 0.10 * chronological-block RMSE std",
+  "ssa": {
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "population_size": 12,
+    "iterations": 12,
+    "unique_evaluations": 346
+  },
+  "all_references_inside_closed_train50": true,
+  "num_selected_train_pairs": 92,
+  "num_selected_train_pair_targets": 38,
+  "num_selected_validation_pairs": 225,
+  "num_selected_test_pairs": 235,
+  "validation_or_test_labels_used_for_reference_selection": false,
+  "test_loaded_after_configuration_freeze": true,
+  "ordinary_test_rmse": 0.3971888214781561,
+  "ssa_test_rmse": 0.4001418518170804,
+  "ssa_test_rmse_change_percent_vs_ordinary": 0.7434827415168543
+}

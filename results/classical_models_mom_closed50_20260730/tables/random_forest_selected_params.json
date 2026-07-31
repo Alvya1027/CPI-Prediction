@@ -1,0 +1,7 @@
+{
+  "model": "random_forest",
+  "max_depth": 3,
+  "min_samples_leaf": 4,
+  "mae": 0.3998322622152077,
+  "rmse": 0.4934285504880932
+}

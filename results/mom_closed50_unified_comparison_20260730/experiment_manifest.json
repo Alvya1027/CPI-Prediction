@@ -1,0 +1,10 @@
+{
+  "created_at": "2026-07-30T23:30:32.565813+08:00",
+  "target_scale": "CPI MoM index (previous month=100)",
+  "num_models": 9,
+  "best_test_rmse_model": "gradient_boosting",
+  "best_test_rmse": 0.3823991927129422,
+  "ordinary_test_rmse": 0.3971888214781561,
+  "ssa_siamese_test_rmse": 0.4001418518170804,
+  "test_used_for_selection": false
+}

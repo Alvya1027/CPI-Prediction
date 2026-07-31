@@ -23,6 +23,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from scipy.io import loadmat
 
 from src.config import DATA_PROCESSED_DIR, RESULTS_DIR
 from src.create_siamese_pairs import (
@@ -63,8 +64,26 @@ def _load_split(data_dir: Path, split: str) -> dict[str, object]:
         .copy()
         .reset_index(drop=True)
     )
-    X = np.load(data_dir / f"X_{split}.npy")
-    y = np.load(data_dir / f"y_{split}.npy")
+    x_path = data_dir / f"X_{split}.npy"
+    y_path = data_dir / f"y_{split}.npy"
+    if x_path.exists() and y_path.exists():
+        X = np.load(x_path)
+        y = np.load(y_path)
+    else:
+        mat_path = data_dir / "cpi_windows.mat"
+        if not mat_path.exists():
+            raise FileNotFoundError(
+                f"Missing {x_path}, {y_path}, and fallback {mat_path}"
+            )
+        payload = loadmat(mat_path)
+        x_key = f"X_{split}"
+        y_key = f"y_{split}"
+        if x_key not in payload or y_key not in payload:
+            raise ValueError(
+                f"{mat_path} must contain {x_key} and {y_key}"
+            )
+        X = np.asarray(payload[x_key], dtype=float)
+        y = np.asarray(payload[y_key], dtype=float).reshape(-1)
     if len(X) != len(y) or len(X) != len(index):
         raise ValueError(f"{split} split is misaligned")
     if not np.allclose(y, index["y"].to_numpy(dtype=float)):
