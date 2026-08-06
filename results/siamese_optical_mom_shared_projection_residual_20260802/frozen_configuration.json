@@ -1,0 +1,30 @@
+{
+  "selected_similarity_weight": 0.0,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "best_epochs": {
+    "42": 0,
+    "43": 0,
+    "44": 0
+  },
+  "fixed_reference_strategy": "SSA hybrid-distance train50 bank",
+  "training_pair_mode": "ssa_selected_92",
+  "k_references": 5,
+  "distance_power": 0.654,
+  "residual_spec": {
+    "projection_hidden_dim": 16,
+    "embedding_dim": 8,
+    "relation_hidden_dim": 8,
+    "dropout": 0.0,
+    "learning_rate": 0.001,
+    "weight_decay": 0.01,
+    "max_epochs": 1200,
+    "evaluation_interval": 5,
+    "patience_evaluations": 80,
+    "min_improvement": 1e-07
+  },
+  "configuration_sha256": "5a3368666b726f17efa901a11f55ad4829e1d776f0eb738d979b9effecb682f0"
+}

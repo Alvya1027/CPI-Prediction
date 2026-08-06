@@ -1,0 +1,4 @@
+model,test_mae,test_rmse
+absolute_only_same_states,0.3115109105457522,0.39718882147816054
+joint_shared_readout_direct_diagnostic,0.3172721365633434,0.41016094792346
+teacher_shared_readout_pair,0.33650345197922304,0.4363022994110072

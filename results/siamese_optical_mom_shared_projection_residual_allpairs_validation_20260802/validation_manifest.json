@@ -1,0 +1,57 @@
+{
+  "experiment": "MoM strict-closed50 shared-projection residual validation",
+  "created_at": "2026-08-02T13:14:22.249259+08:00",
+  "validation_only": true,
+  "test_arrays_states_or_pair_tables_opened": false,
+  "pretest_split_loading": "physically isolated train/val files",
+  "combined_sample_index_or_mat_opened": false,
+  "pretest_files": [
+    "sample_index_train.csv",
+    "X_train.npy",
+    "y_train.npy",
+    "states_train.mat",
+    "states_val.mat",
+    "ssa_selected_train_pairs.csv",
+    "ssa_selected_validation_pairs.csv"
+  ],
+  "accessible_train_windows": 50,
+  "num_training_pairs": 741,
+  "num_validation_targets": 45,
+  "frozen_ridge_alpha": 100.0,
+  "configuration": {
+    "selected_similarity_weight": 0.0,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "best_epochs": {
+      "42": 0,
+      "43": 0,
+      "44": 0
+    },
+    "fixed_reference_strategy": "SSA hybrid-distance train50 bank",
+    "training_pair_mode": "all_causal_741",
+    "k_references": 5,
+    "distance_power": 0.654,
+    "residual_spec": {
+      "projection_hidden_dim": 16,
+      "embedding_dim": 8,
+      "relation_hidden_dim": 8,
+      "dropout": 0.0,
+      "learning_rate": 0.001,
+      "weight_decay": 0.01,
+      "max_epochs": 1200,
+      "evaluation_interval": 5,
+      "patience_evaluations": 80,
+      "min_improvement": 1e-07
+    }
+  },
+  "configuration_sha256": "1fb69203529ebf472df86c4621190c3bc1b0053be01a67bfafc3abbb29a40dfc",
+  "validation_ensemble_metrics": {
+    "mae": 0.35304854906951816,
+    "rmse": 0.44679092931184144,
+    "chronological_block_rmse_std": 0.052257485914470256,
+    "fitness": 0.4520166779032885
+  }
+}

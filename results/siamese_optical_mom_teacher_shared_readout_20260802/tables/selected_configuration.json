@@ -1,0 +1,75 @@
+{
+  "reporting_status": "legacy_continuous_state_not_teacher_final_explicit_twin",
+  "status": "validation_frozen_not_tested",
+  "created_at": "2026-08-02T17:17:50.490357+08:00",
+  "experiment": "teacher shared linear readout on a fixed optical reservoir",
+  "state_protocol": "continuous_serial_shared_fixed_reservoir",
+  "configuration": {
+    "alpha": 100.0,
+    "pair_weight": 0.1,
+    "k_references": 5,
+    "aggregation": "mean",
+    "min_gap_months": 1,
+    "absolute_alpha": 2.0
+  },
+  "selection_metric": "validation target-level RMSE, then MAE",
+  "ridge_objective": "mean_squared_error + alpha * squared_l2_output_weight",
+  "alpha_grid_scale": "includes exact n_train=50 normalized equivalents of the legacy sklearn Ridge alpha grid",
+  "protocol_revision": "An initial local test artifact was invalidated before reporting because the normalized alpha grid omitted alpha=2, equivalent to the legacy single-network alpha=100. Validation freeze and test were rerun from scratch after correcting this implementation-level fairness issue.",
+  "accessible_original_train_months": 50,
+  "derived_train_pair_relations": 741,
+  "derived_train_pair_target_months": 38,
+  "validation_targets": 45,
+  "test_data_loaded": false,
+  "test_state_loaded": false,
+  "test_evaluated": false,
+  "reservoir_parameters_trained": false,
+  "only_output_weights_trained": true,
+  "train_validation_state_audit": {
+    "status": "passed",
+    "state_protocol": "continuous_serial_shared_fixed_reservoir",
+    "state_width": 50,
+    "shared_fixed_mask": true,
+    "loaded_splits": [
+      "train",
+      "val"
+    ],
+    "splits": {
+      "train": {
+        "state_file": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi_mom_recent50_20260730\\states\\states_train.mat",
+        "sha256": "5bbffbd70edf75519fce2b91f3208fb244f1885aab52e096c5967f2eacbbcb56",
+        "shape": [
+          50,
+          50
+        ],
+        "first_target_date": "2014-07",
+        "last_target_date": "2018-08"
+      },
+      "val": {
+        "state_file": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi_mom_recent50_20260730\\states\\states_val.mat",
+        "sha256": "4d4204fbc5d388b9c55bf8d1edcc706b130de1012782792d083903a82e198b97",
+        "shape": [
+          45,
+          50
+        ],
+        "first_target_date": "2018-09",
+        "last_target_date": "2022-05"
+      }
+    }
+  },
+  "data_manifest_sha256": "379d9c4da7d158d5d1b4178ec88fa6f72a5ce89eb0bb72a25882167cf00f8f12",
+  "validation_metrics": {
+    "absolute_only": {
+      "mae": 0.38617782080127844,
+      "rmse": 0.4876982377447215
+    },
+    "teacher_pair": {
+      "mae": 0.32368006799241394,
+      "rmse": 0.4208357087690151
+    },
+    "reference_calibration_without_pair_loss_ablation": {
+      "mae": 0.3238013026194415,
+      "rmse": 0.4206884189448227
+    }
+  }
+}

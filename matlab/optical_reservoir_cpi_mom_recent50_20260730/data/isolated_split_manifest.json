@@ -1,0 +1,50 @@
+{
+  "purpose": "physical split isolation for pre-test experiment loading",
+  "source_files": {
+    "sample_index.csv": "9d4fcdd0f020fea863c31756b4fa1991fe4f00e53d3ff6d5aba0168328c2c209",
+    "cpi_windows.mat": "a3d2ba666a83237b4df61ccbe532b91057cdb3b807c21ba985f0cd87138c031d"
+  },
+  "splits": {
+    "train": {
+      "num_targets": 50,
+      "first_target_date": "2014-07",
+      "last_target_date": "2018-08",
+      "X_shape": [
+        50,
+        12
+      ]
+    },
+    "val": {
+      "num_targets": 45,
+      "first_target_date": "2018-09",
+      "last_target_date": "2022-05",
+      "X_shape": [
+        45,
+        12
+      ]
+    },
+    "test": {
+      "num_targets": 47,
+      "first_target_date": "2022-06",
+      "last_target_date": "2026-04",
+      "X_shape": [
+        47,
+        12
+      ]
+    }
+  },
+  "outputs": {
+    "sample_index_train.csv": "70b7768e68035382a464e08a004103f15ee38384f6c2d66725e6deff1ce50ff4",
+    "X_train.npy": "2ffa57fb26a11c57aa9830c25f52b03a02e83a4d5041e23a8e2d163350da5ae7",
+    "y_train.npy": "f9e787535a8c34d62087b22d561d1034eef104c8294458f0f1eea84ce25d1b0e",
+    "cpi_train_isolated.mat": "d4b5f0406c27c8d571b11e8161aa17cf42db70f8dedf1896967e3c08d3c6e498",
+    "sample_index_val.csv": "86a0a95fa55bb61146ebf52649563e8595ad267a871dcd946f7b04a844cf11a9",
+    "X_val.npy": "f79808b1a0342c41e3289cfc5cc03804538c7e604d02ef13603504c92920f143",
+    "y_val.npy": "da7695350849ec3238d06169a7af54c494766c0c28952ce62bfe30bc27dbe60f",
+    "cpi_val_isolated.mat": "96597ac23d75475ebe3195e337203a93c74984bfbcfe71493e343a64e5d4ed04",
+    "sample_index_test.csv": "3f55e315430732662e8af6b436c7fefb4b0c607162cb169caf678aa68b8d137b",
+    "X_test.npy": "52802667260fcbb548468ee83e5f5219b8414bf6421ce7c332f90a7e09196726",
+    "y_test.npy": "b19756bddb52edafd3be6e3a14a46370d9fd643787f898a8392a59c1fbbd6ab3",
+    "cpi_test_isolated.mat": "8d1ee4c3e3987df59e68d69084d37f381012cc00a8e9eec6720e7576e1576b8b"
+  }
+}

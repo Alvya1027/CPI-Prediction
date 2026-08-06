@@ -1,0 +1,4 @@
+model,val_mae,val_rmse
+absolute_only_same_states,0.38617782080127844,0.4876982377447215
+reference_calibration_without_pair_loss_ablation,0.3238013026194415,0.4206884189448227
+teacher_shared_readout_pair,0.32368006799241394,0.4208357087690151

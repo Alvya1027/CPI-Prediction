@@ -1,0 +1,177 @@
+{
+  "experiment": "MoM strict-closed50 stabilized shared-projection Siamese residual",
+  "created_at": "2026-08-02T13:15:57.519761+08:00",
+  "evaluation_status": "exploratory re-analysis; historical test previously observed",
+  "profile_audit": {
+    "status": "passed",
+    "target_scale": "CPI MoM index (previous month=100)",
+    "window_size": 12,
+    "source_sequence_verified": true,
+    "state_width": 50,
+    "shared_mask": true,
+    "splits": {
+      "train": {
+        "num_targets": 50,
+        "first_target_date": "2014-07",
+        "last_target_date": "2018-08",
+        "state_shape": [
+          50,
+          50
+        ]
+      },
+      "val": {
+        "num_targets": 45,
+        "first_target_date": "2018-09",
+        "last_target_date": "2022-05",
+        "state_shape": [
+          45,
+          50
+        ]
+      },
+      "test": {
+        "num_targets": 47,
+        "first_target_date": "2022-06",
+        "last_target_date": "2026-04",
+        "state_shape": [
+          47,
+          50
+        ]
+      }
+    },
+    "closed_train_sample_ids": [
+      0,
+      49
+    ]
+  },
+  "data_directory": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi_mom_recent50_20260730\\data",
+  "state_directory": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi_mom_recent50_20260730\\states",
+  "frozen_optical_reservoir": true,
+  "reservoir_parameters_changed": false,
+  "frozen_base_model": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\results\\siamese_optical_mom_closed50_ssa_20260730\\models\\ssa_siamese_readout.npz",
+  "frozen_base_alpha": 100.0,
+  "candidate_trainable_components": [
+    "shared_projection",
+    "zero_initialized_antisymmetric_residual_head"
+  ],
+  "selected_effective_components": [
+    "frozen_ssa_ridge_base"
+  ],
+  "effective_shared_projection": false,
+  "selection_outcome": "all seeds selected epoch 0; shared projection correction rejected by validation",
+  "accessible_train_windows": 50,
+  "validation_targets": 45,
+  "test_targets": 47,
+  "num_training_pairs": 92,
+  "num_training_pair_targets": 38,
+  "num_validation_pairs": 225,
+  "num_test_pairs": 235,
+  "configuration": {
+    "selected_similarity_weight": 0.0,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "best_epochs": {
+      "42": 0,
+      "43": 0,
+      "44": 0
+    },
+    "fixed_reference_strategy": "SSA hybrid-distance train50 bank",
+    "training_pair_mode": "ssa_selected_92",
+    "k_references": 5,
+    "distance_power": 0.654,
+    "residual_spec": {
+      "projection_hidden_dim": 16,
+      "embedding_dim": 8,
+      "relation_hidden_dim": 8,
+      "dropout": 0.0,
+      "learning_rate": 0.001,
+      "weight_decay": 0.01,
+      "max_epochs": 1200,
+      "evaluation_interval": 5,
+      "patience_evaluations": 80,
+      "min_improvement": 1e-07
+    }
+  },
+  "configuration_sha256": "5a3368666b726f17efa901a11f55ad4829e1d776f0eb738d979b9effecb682f0",
+  "configuration_selection_rule": "minimum mean validation fitness across all predeclared seeds",
+  "test_seed_rule": "equal-weight ensemble of every predeclared seed",
+  "all_references_inside_train50": true,
+  "target_labels_directly_used_in_reference_ranking_rows": false,
+  "reference_strategy_previously_selected_on_validation": true,
+  "state_scaler_fit_on_train50_only": true,
+  "similarity_targets_fit_on_training_pairs_only": true,
+  "test_semantic_payload_loaded_after_configuration_freeze": true,
+  "test_labels_used_for_selection": false,
+  "historical_test_previously_observed": true,
+  "pretest_split_loading": "physically isolated train/val files",
+  "combined_sample_index_or_mat_opened_before_freeze": false,
+  "isolated_split_manifest": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi_mom_recent50_20260730\\data\\isolated_split_manifest.json",
+  "validation_ensemble_metrics": {
+    "mae": 0.35304854906951816,
+    "rmse": 0.44679092931184144,
+    "chronological_block_rmse_std": 0.052257485914470256,
+    "fitness": 0.4520166779032885
+  },
+  "test_ensemble_metrics": {
+    "mae": 0.3039294687442254,
+    "rmse": 0.4001418518170826,
+    "chronological_block_rmse_std": 0.04111025820348242,
+    "fitness": 0.40425287763743084
+  },
+  "model_comparison": [
+    {
+      "model": "ordinary_optical_reservoir",
+      "trainable_shared_projection": false,
+      "similarity_constraint": false,
+      "val_mae": 0.3861778208012728,
+      "val_rmse": 0.4876982377447144,
+      "test_mae": 0.3115109105457473,
+      "test_rmse": 0.3971888214781561,
+      "shared_projection_architecture_present": false,
+      "effective_shared_projection": false,
+      "selection_outcome": "not_applicable"
+    },
+    {
+      "model": "current_ssa_pairwise_ridge",
+      "trainable_shared_projection": false,
+      "similarity_constraint": false,
+      "val_mae": 0.3530485490695159,
+      "val_rmse": 0.4467909293118404,
+      "test_mae": 0.3039294687442239,
+      "test_rmse": 0.4001418518170804,
+      "shared_projection_architecture_present": false,
+      "effective_shared_projection": false,
+      "selection_outcome": "not_applicable"
+    },
+    {
+      "model": "ssa_fallback_shared_projection_rejected",
+      "trainable_shared_projection": false,
+      "similarity_constraint": false,
+      "val_mae": 0.35304854906951816,
+      "val_rmse": 0.44679092931184144,
+      "test_mae": 0.3039294687442254,
+      "test_rmse": 0.4001418518170826,
+      "shared_projection_architecture_present": true,
+      "effective_shared_projection": false,
+      "selection_outcome": "all_seeds_selected_epoch0; neural branch rejected"
+    }
+  ],
+  "input_sha256": {
+    "isolated_split_manifest": "f569e3f718593d45c75eac377ff3440aef9eaf796b9bf81359661ba42210503f",
+    "sample_index_train": "70b7768e68035382a464e08a004103f15ee38384f6c2d66725e6deff1ce50ff4",
+    "X_train": "2ffa57fb26a11c57aa9830c25f52b03a02e83a4d5041e23a8e2d163350da5ae7",
+    "y_train": "f9e787535a8c34d62087b22d561d1034eef104c8294458f0f1eea84ce25d1b0e",
+    "sample_index_val": "86a0a95fa55bb61146ebf52649563e8595ad267a871dcd946f7b04a844cf11a9",
+    "X_val": "f79808b1a0342c41e3289cfc5cc03804538c7e604d02ef13603504c92920f143",
+    "y_val": "da7695350849ec3238d06169a7af54c494766c0c28952ce62bfe30bc27dbe60f",
+    "sample_index_test": "3f55e315430732662e8af6b436c7fefb4b0c607162cb169caf678aa68b8d137b",
+    "X_test": "52802667260fcbb548468ee83e5f5219b8414bf6421ce7c332f90a7e09196726",
+    "y_test": "b19756bddb52edafd3be6e3a14a46370d9fd643787f898a8392a59c1fbbd6ab3",
+    "frozen_base_model": "1b8a6c4dca491869053fbffd042c6b3ab9d65ce32b1c6aeca69dd35b42f080ad",
+    "training_pairs": "449febad2f3a14ab95495f6ee526d68d428b1a79309fc1eecf6b1994f6b5281f",
+    "validation_pairs": "18700bf148f890ecc1b25f2d9ea034a84efd9255263cfe540872088b0a61898f",
+    "test_pairs": "9d5f605aa4098565cdc343d386a1bb892a57f92c8dce1900837b948541979855"
+  }
+}

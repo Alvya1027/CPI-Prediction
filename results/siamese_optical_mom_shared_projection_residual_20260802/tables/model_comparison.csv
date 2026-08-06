@@ -1,0 +1,4 @@
+model,trainable_shared_projection,similarity_constraint,val_mae,val_rmse,test_mae,test_rmse,shared_projection_architecture_present,effective_shared_projection,selection_outcome
+ordinary_optical_reservoir,False,False,0.3861778208012728,0.4876982377447144,0.3115109105457473,0.3971888214781561,False,False,not_applicable
+current_ssa_pairwise_ridge,False,False,0.3530485490695159,0.4467909293118404,0.3039294687442239,0.4001418518170804,False,False,not_applicable
+ssa_fallback_shared_projection_rejected,False,False,0.35304854906951816,0.44679092931184144,0.3039294687442254,0.4001418518170826,True,False,all_seeds_selected_epoch0; neural branch rejected
