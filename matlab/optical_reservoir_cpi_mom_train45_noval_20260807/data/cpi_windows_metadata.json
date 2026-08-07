@@ -1,0 +1,29 @@
+{
+  "source": "data_processed/cpi_data_lastmonth=100.csv",
+  "target_scale": "CPI MoM index (previous month=100)",
+  "window_size": 12,
+  "forecast_horizon_months": 1,
+  "split_method": "train45/test47 explicit target-date ranges; no validation split",
+  "splits": {
+    "train": {
+      "num_samples": 45,
+      "first_target_date": "2018-09",
+      "last_target_date": "2022-05",
+      "X_shape": [
+        45,
+        12
+      ]
+    },
+    "test": {
+      "num_samples": 47,
+      "first_target_date": "2022-06",
+      "last_target_date": "2026-04",
+      "X_shape": [
+        47,
+        12
+      ]
+    }
+  },
+  "scaler_fit_scope": "train targets 2018-09 through 2022-05 only",
+  "hyperparameter_policy": "fixed before test; test labels must not select configuration"
+}

@@ -12,8 +12,12 @@ if nargin < 2 || isempty(config)
     config = config_twin_cpi_rc();
 end
 split = char(lower(string(split)));
-assert(any(strcmp(split, {'train', 'val', 'test'})), ...
-    'split must be train, val, or test.');
+valid_splits = {'train', 'val', 'test'};
+if isfield(config, 'valid_splits')
+    valid_splits = cellstr(string(config.valid_splits));
+end
+assert(any(strcmp(split, valid_splits)), ...
+    'split is not enabled for this experiment profile.');
 
 repeat_count = twin_repeat_count(config);
 assert(repeat_count == 4, ...
@@ -76,7 +80,14 @@ if strcmp(split, 'train')
     train_fit_sample_id = sample_id;
     mask_sha256 = sha256_numeric(mask);
     transform_schema_version = '1.0';
-    transform_fit_scope = 'train_50_only';
+    expected_train_count = 50;
+    if isfield(config, 'train_count')
+        expected_train_count = double(config.train_count);
+    end
+    assert(numel(train_fit_sample_id) == expected_train_count, ...
+        'Expected %d training windows, found %d.', ...
+        expected_train_count, numel(train_fit_sample_id));
+    transform_fit_scope = sprintf('train_%d_only', expected_train_count);
     save(transform_file, 'transform_schema_version', ...
         'transform_fit_scope', 'input_scaler_mean', ...
         'input_scaler_scale', 'mask', 'mask_scale', 'mask_sha256', ...
@@ -88,8 +99,13 @@ else
     transform = load(transform_file, 'input_scaler_mean', ...
         'input_scaler_scale', 'mask', 'mask_scale', 'mask_sha256', ...
         'train_fit_sample_id');
-    assert(numel(transform.train_fit_sample_id) == 50, ...
-        'The twin transform was not fitted on exactly 50 training windows.');
+    expected_train_count = 50;
+    if isfield(config, 'train_count')
+        expected_train_count = double(config.train_count);
+    end
+    assert(numel(transform.train_fit_sample_id) == expected_train_count, ...
+        'The twin transform was not fitted on exactly %d training windows.', ...
+        expected_train_count);
     input_scaler_mean = double(transform.input_scaler_mean);
     input_scaler_scale = double(transform.input_scaler_scale);
     mask = double(transform.mask);

@@ -2,7 +2,22 @@
 
 本目录用于把现有 CPI 小样本数据送入老师提供的光储备池 Simulink 模型。`SL_RC.slx` 是工作副本，原始 `ESN/SL_RC.slx` 不做任何修改。
 
-## 老师最终显式双分支入口
+## 当前Train45 / Test47无验证集入口（2026-08-07）
+
+```matlab
+% 阶段A：只生成2018-09至2022-05的train45
+outputs = run_teacher_twin_train45_noval();
+
+% Python固定配置并写出test_generation_authorization.json之后
+% 阶段C：生成保持不变的2022-06至2026-04 test47
+outputs = run_teacher_twin_test45_frozen();
+```
+
+新输出位于相邻的
+`optical_reservoir_cpi_mom_train45_noval_20260807/`。没有独立验证集，
+测试集不能用于调参；所有配置必须在阶段C之前冻结。
+
+## 历史Train50 / Val45 / Test47显式双分支入口
 
 正式方案使用 `Twin_SL_RC.slx` 中两个 Model Reference，它们都引用同一个
 `SL_RC_shared_branch.slx`。每个目标/参考窗口同时经过两支固定动力学；窗口

@@ -1,0 +1,37 @@
+{
+  "purpose": "physical train/test isolation without a validation split",
+  "source_files": {
+    "sample_index.csv": "0e19b8f5455fa5fb46da7c7c2de42f01175eca6f276d9c945c1f097252f6523d",
+    "cpi_windows.mat": "a84b80b5d65361eb1501dd60a038e057017027c35d92acc1279e5031dcb698c6"
+  },
+  "splits": {
+    "train": {
+      "num_samples": 45,
+      "first_target_date": "2018-09",
+      "last_target_date": "2022-05",
+      "X_shape": [
+        45,
+        12
+      ]
+    },
+    "test": {
+      "num_samples": 47,
+      "first_target_date": "2022-06",
+      "last_target_date": "2026-04",
+      "X_shape": [
+        47,
+        12
+      ]
+    }
+  },
+  "outputs": {
+    "sample_index_train.csv": "62f8a1b425bee4b73bd7b33eeec7c3750c42280a2dd10132a877765df8608285",
+    "X_train.npy": "69b9dcdcb5ff3b568d61909ee1058143beff6e07e592b958a1d6c82c8d0ac71c",
+    "y_train.npy": "da7695350849ec3238d06169a7af54c494766c0c28952ce62bfe30bc27dbe60f",
+    "cpi_train_isolated.mat": "e99a78bf0834f402c8f5e50f80f540ea1ad1bd3b644c9c4ac375309446a2a710",
+    "sample_index_test.csv": "ba0161ffe5ddea3574f88ee4d34b8ed012214d1f7ade5264b009dba6eb107c6b",
+    "X_test.npy": "da465f62abea415be1eba708a065955b626e4cd06d8c395a264d6f73e01c9b88",
+    "y_test.npy": "b19756bddb52edafd3be6e3a14a46370d9fd643787f898a8392a59c1fbbd6ab3",
+    "cpi_test_isolated.mat": "bbcfd481c782304949333dbe7b9210c3df38ce261c1a933467456a2619e3c061"
+  }
+}

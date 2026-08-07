@@ -14,7 +14,25 @@ cpi_i_hat = cpi_j + delta_cpi_hat
 
 相似标签只用于参考窗口分析，不是最终分类目标。第一版不使用 Contrastive Loss，也不训练光储备池内部参数，只训练回归读出层。
 
-## 老师最终方案（2026-08-02）
+## 当前正式划分：Train45 / Test47，无验证集（2026-08-07）
+
+当前环比实验已取消独立验证集：训练目标改为 `2018-09—2022-05`
+共45个，测试目标保持 `2022-06—2026-04` 共47个。测试集不得用于选参，
+所以读出层和参考策略参数必须在测试状态生成前固定。
+
+严格流程为：
+
+1. MATLAB：`run_teacher_twin_train45_noval()`，只生成45个训练状态；
+2. Python：`python scripts/run_teacher_explicit_twin_mom_train45_noval.py`，冻结固定配置并写测试状态授权；
+3. MATLAB：`run_teacher_twin_test45_frozen()`，生成47个测试状态；
+4. Python：向同一入口传入 `--frozen-test <fixed_configuration.json>`，只评价测试集一次。
+
+新数据和状态独立存放在
+`matlab/optical_reservoir_cpi_mom_train45_noval_20260807/`，不覆盖历史实验。
+完整边界见
+[`docs/teacher_explicit_twin_train45_noval_protocol.md`](docs/teacher_explicit_twin_train45_noval_protocol.md)。
+
+## 历史正式方案：Train50 / Val45 / Test47（2026-08-02）
 
 最终实验不再把旧的单分支连续状态直接当成孪生方案。MATLAB 会从同一个
 `SL_RC_shared_branch.slx` 建立两个 Model Reference：目标窗口和参考窗口
@@ -22,7 +40,7 @@ cpi_i_hat = cpi_j + delta_cpi_hat
 初态开始重复4轮，按节点结束时刻截取第4轮50维状态。储备池内部、mask和
 物理参数固定，监督训练只闭式求一组共享线性输出权重。
 
-严格流程为：
+该历史流程为：
 
 1. MATLAB：`run_teacher_twin_train_validation()`，只生成50个训练状态和45个验证状态，并完成双分支等价性审计。
 2. Python：`python scripts/run_teacher_explicit_twin_mom_closed50.py`，只用训练/验证选择配置，冻结后写测试状态授权。
