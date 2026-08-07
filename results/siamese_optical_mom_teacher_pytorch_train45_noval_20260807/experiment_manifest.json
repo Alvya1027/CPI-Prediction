@@ -1,0 +1,983 @@
+{
+  "experiment": "teacher-style PyTorch Siamese on MoM explicit-Twin optical states",
+  "created_at": "2026-08-07T19:07:13.110993+08:00",
+  "source": "cpi_data_lastmonth=100.csv actual MoM sequence",
+  "split_protocol": "train 2018-09..2022-05 (45), test 2022-06..2026-04 (47), no validation",
+  "architecture": "fixed 50D optical states -> shared Linear-ReLU-BatchNorm-Linear-ReLU-Linear backbone -> 32D embedding difference -> Linear-ReLU-Linear regression head",
+  "configuration": {
+    "input_dim": 50,
+    "hidden_dim": 64,
+    "embedding_dim": 32,
+    "head_hidden_dim": 32,
+    "batch_size": 64,
+    "epochs": 50,
+    "learning_rate": 0.001,
+    "min_gap_months": 1,
+    "k_references": 5,
+    "aggregation": "mean",
+    "seeds": [
+      42,
+      52,
+      62
+    ]
+  },
+  "configuration_policy": "identical to the predeclared YoY teacher-style run; three seeds form a fixed mean ensemble; no MoM test metric used to choose a seed or hyperparameter",
+  "training_targets": 45,
+  "derived_training_pairs": 561,
+  "derived_pair_target_months": 33,
+  "test_targets": 47,
+  "test_references_per_target": 5,
+  "all_test_references_from_train45": true,
+  "test_labels_used_for_reference_selection": false,
+  "reservoir_parameters_trained": false,
+  "pytorch_backbone_and_regression_head_trained": true,
+  "state_standardization_fit_on_train45_only": true,
+  "explicit_twin_state_audit": {
+    "status": "passed",
+    "state_protocol": "explicit_twin_audited_unique_window_cache_v1",
+    "protocol_identity_sha256": "2a03a8000c12ef1216dbbdcf25e69eb9952a89e62961cd99f3409baf8bccb592",
+    "state_width": 50,
+    "loaded_splits": [
+      "train",
+      "test"
+    ],
+    "cache_reuse_declared": true,
+    "cache_generated_by_explicit_twin_model": true,
+    "semantic_pairs_simulated_simultaneously": false,
+    "pair_states_resolved_by_sample_id": true,
+    "only_output_weights_trainable_downstream": true,
+    "shared_branch_model_sha256": "1af85380443fe75cbe2adbb2a0b325e0bce3e5c28e418edae6c3be1a080a9b04",
+    "twin_model_sha256": "617196c2c038606b688cbf4debce73d67354d284f81a55c6c6891ebfbc17a1d9",
+    "simulation_protocol_sha256": "afb3c2331dd900ac4f75d9d2412c8ce1bcf2dc15aaec75fc903c6c7c64a77a8b",
+    "audit_mat_sha256": "803887ccc703ac6ba73c5103bb52cf306e45f778eb3812db3575c6ed6e6d5e72",
+    "audit_json_sha256": "765485db27ea009151ef6ebfde2a19f4a6212d9eaaade3439c883425e4aa9112",
+    "cache_records": [
+      {
+        "split": "train",
+        "sample_id": 0,
+        "cache_record_id": "train:0",
+        "branch_id": "target",
+        "partner_sample_id": 1,
+        "generation_run_id": "train:run:001",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 1,
+        "cache_record_id": "train:1",
+        "branch_id": "reference",
+        "partner_sample_id": 0,
+        "generation_run_id": "train:run:001",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 2,
+        "cache_record_id": "train:2",
+        "branch_id": "target",
+        "partner_sample_id": 3,
+        "generation_run_id": "train:run:002",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 3,
+        "cache_record_id": "train:3",
+        "branch_id": "reference",
+        "partner_sample_id": 2,
+        "generation_run_id": "train:run:002",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 4,
+        "cache_record_id": "train:4",
+        "branch_id": "target",
+        "partner_sample_id": 5,
+        "generation_run_id": "train:run:003",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 5,
+        "cache_record_id": "train:5",
+        "branch_id": "reference",
+        "partner_sample_id": 4,
+        "generation_run_id": "train:run:003",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 6,
+        "cache_record_id": "train:6",
+        "branch_id": "target",
+        "partner_sample_id": 7,
+        "generation_run_id": "train:run:004",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 7,
+        "cache_record_id": "train:7",
+        "branch_id": "reference",
+        "partner_sample_id": 6,
+        "generation_run_id": "train:run:004",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 8,
+        "cache_record_id": "train:8",
+        "branch_id": "target",
+        "partner_sample_id": 9,
+        "generation_run_id": "train:run:005",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 9,
+        "cache_record_id": "train:9",
+        "branch_id": "reference",
+        "partner_sample_id": 8,
+        "generation_run_id": "train:run:005",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 10,
+        "cache_record_id": "train:10",
+        "branch_id": "target",
+        "partner_sample_id": 11,
+        "generation_run_id": "train:run:006",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 11,
+        "cache_record_id": "train:11",
+        "branch_id": "reference",
+        "partner_sample_id": 10,
+        "generation_run_id": "train:run:006",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 12,
+        "cache_record_id": "train:12",
+        "branch_id": "target",
+        "partner_sample_id": 13,
+        "generation_run_id": "train:run:007",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 13,
+        "cache_record_id": "train:13",
+        "branch_id": "reference",
+        "partner_sample_id": 12,
+        "generation_run_id": "train:run:007",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 14,
+        "cache_record_id": "train:14",
+        "branch_id": "target",
+        "partner_sample_id": 15,
+        "generation_run_id": "train:run:008",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 15,
+        "cache_record_id": "train:15",
+        "branch_id": "reference",
+        "partner_sample_id": 14,
+        "generation_run_id": "train:run:008",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 16,
+        "cache_record_id": "train:16",
+        "branch_id": "target",
+        "partner_sample_id": 17,
+        "generation_run_id": "train:run:009",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 17,
+        "cache_record_id": "train:17",
+        "branch_id": "reference",
+        "partner_sample_id": 16,
+        "generation_run_id": "train:run:009",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 18,
+        "cache_record_id": "train:18",
+        "branch_id": "target",
+        "partner_sample_id": 19,
+        "generation_run_id": "train:run:010",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 19,
+        "cache_record_id": "train:19",
+        "branch_id": "reference",
+        "partner_sample_id": 18,
+        "generation_run_id": "train:run:010",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 20,
+        "cache_record_id": "train:20",
+        "branch_id": "target",
+        "partner_sample_id": 21,
+        "generation_run_id": "train:run:011",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 21,
+        "cache_record_id": "train:21",
+        "branch_id": "reference",
+        "partner_sample_id": 20,
+        "generation_run_id": "train:run:011",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 22,
+        "cache_record_id": "train:22",
+        "branch_id": "target",
+        "partner_sample_id": 23,
+        "generation_run_id": "train:run:012",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 23,
+        "cache_record_id": "train:23",
+        "branch_id": "reference",
+        "partner_sample_id": 22,
+        "generation_run_id": "train:run:012",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 24,
+        "cache_record_id": "train:24",
+        "branch_id": "target",
+        "partner_sample_id": 25,
+        "generation_run_id": "train:run:013",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 25,
+        "cache_record_id": "train:25",
+        "branch_id": "reference",
+        "partner_sample_id": 24,
+        "generation_run_id": "train:run:013",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 26,
+        "cache_record_id": "train:26",
+        "branch_id": "target",
+        "partner_sample_id": 27,
+        "generation_run_id": "train:run:014",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 27,
+        "cache_record_id": "train:27",
+        "branch_id": "reference",
+        "partner_sample_id": 26,
+        "generation_run_id": "train:run:014",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 28,
+        "cache_record_id": "train:28",
+        "branch_id": "target",
+        "partner_sample_id": 29,
+        "generation_run_id": "train:run:015",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 29,
+        "cache_record_id": "train:29",
+        "branch_id": "reference",
+        "partner_sample_id": 28,
+        "generation_run_id": "train:run:015",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 30,
+        "cache_record_id": "train:30",
+        "branch_id": "target",
+        "partner_sample_id": 31,
+        "generation_run_id": "train:run:016",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 31,
+        "cache_record_id": "train:31",
+        "branch_id": "reference",
+        "partner_sample_id": 30,
+        "generation_run_id": "train:run:016",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 32,
+        "cache_record_id": "train:32",
+        "branch_id": "target",
+        "partner_sample_id": 33,
+        "generation_run_id": "train:run:017",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 33,
+        "cache_record_id": "train:33",
+        "branch_id": "reference",
+        "partner_sample_id": 32,
+        "generation_run_id": "train:run:017",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 34,
+        "cache_record_id": "train:34",
+        "branch_id": "target",
+        "partner_sample_id": 35,
+        "generation_run_id": "train:run:018",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 35,
+        "cache_record_id": "train:35",
+        "branch_id": "reference",
+        "partner_sample_id": 34,
+        "generation_run_id": "train:run:018",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 36,
+        "cache_record_id": "train:36",
+        "branch_id": "target",
+        "partner_sample_id": 37,
+        "generation_run_id": "train:run:019",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 37,
+        "cache_record_id": "train:37",
+        "branch_id": "reference",
+        "partner_sample_id": 36,
+        "generation_run_id": "train:run:019",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 38,
+        "cache_record_id": "train:38",
+        "branch_id": "target",
+        "partner_sample_id": 39,
+        "generation_run_id": "train:run:020",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 39,
+        "cache_record_id": "train:39",
+        "branch_id": "reference",
+        "partner_sample_id": 38,
+        "generation_run_id": "train:run:020",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 40,
+        "cache_record_id": "train:40",
+        "branch_id": "target",
+        "partner_sample_id": 41,
+        "generation_run_id": "train:run:021",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 41,
+        "cache_record_id": "train:41",
+        "branch_id": "reference",
+        "partner_sample_id": 40,
+        "generation_run_id": "train:run:021",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 42,
+        "cache_record_id": "train:42",
+        "branch_id": "target",
+        "partner_sample_id": 43,
+        "generation_run_id": "train:run:022",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 43,
+        "cache_record_id": "train:43",
+        "branch_id": "reference",
+        "partner_sample_id": 42,
+        "generation_run_id": "train:run:022",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 44,
+        "cache_record_id": "train:44",
+        "branch_id": "target",
+        "partner_sample_id": 44,
+        "generation_run_id": "train:run:023",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "test",
+        "sample_id": 45,
+        "cache_record_id": "test:45",
+        "branch_id": "target",
+        "partner_sample_id": 46,
+        "generation_run_id": "test:run:001",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 46,
+        "cache_record_id": "test:46",
+        "branch_id": "reference",
+        "partner_sample_id": 45,
+        "generation_run_id": "test:run:001",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 47,
+        "cache_record_id": "test:47",
+        "branch_id": "target",
+        "partner_sample_id": 48,
+        "generation_run_id": "test:run:002",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 48,
+        "cache_record_id": "test:48",
+        "branch_id": "reference",
+        "partner_sample_id": 47,
+        "generation_run_id": "test:run:002",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 49,
+        "cache_record_id": "test:49",
+        "branch_id": "target",
+        "partner_sample_id": 50,
+        "generation_run_id": "test:run:003",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 50,
+        "cache_record_id": "test:50",
+        "branch_id": "reference",
+        "partner_sample_id": 49,
+        "generation_run_id": "test:run:003",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 51,
+        "cache_record_id": "test:51",
+        "branch_id": "target",
+        "partner_sample_id": 52,
+        "generation_run_id": "test:run:004",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 52,
+        "cache_record_id": "test:52",
+        "branch_id": "reference",
+        "partner_sample_id": 51,
+        "generation_run_id": "test:run:004",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 53,
+        "cache_record_id": "test:53",
+        "branch_id": "target",
+        "partner_sample_id": 54,
+        "generation_run_id": "test:run:005",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 54,
+        "cache_record_id": "test:54",
+        "branch_id": "reference",
+        "partner_sample_id": 53,
+        "generation_run_id": "test:run:005",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 55,
+        "cache_record_id": "test:55",
+        "branch_id": "target",
+        "partner_sample_id": 56,
+        "generation_run_id": "test:run:006",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 56,
+        "cache_record_id": "test:56",
+        "branch_id": "reference",
+        "partner_sample_id": 55,
+        "generation_run_id": "test:run:006",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 57,
+        "cache_record_id": "test:57",
+        "branch_id": "target",
+        "partner_sample_id": 58,
+        "generation_run_id": "test:run:007",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 58,
+        "cache_record_id": "test:58",
+        "branch_id": "reference",
+        "partner_sample_id": 57,
+        "generation_run_id": "test:run:007",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 59,
+        "cache_record_id": "test:59",
+        "branch_id": "target",
+        "partner_sample_id": 60,
+        "generation_run_id": "test:run:008",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 60,
+        "cache_record_id": "test:60",
+        "branch_id": "reference",
+        "partner_sample_id": 59,
+        "generation_run_id": "test:run:008",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 61,
+        "cache_record_id": "test:61",
+        "branch_id": "target",
+        "partner_sample_id": 62,
+        "generation_run_id": "test:run:009",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 62,
+        "cache_record_id": "test:62",
+        "branch_id": "reference",
+        "partner_sample_id": 61,
+        "generation_run_id": "test:run:009",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 63,
+        "cache_record_id": "test:63",
+        "branch_id": "target",
+        "partner_sample_id": 64,
+        "generation_run_id": "test:run:010",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 64,
+        "cache_record_id": "test:64",
+        "branch_id": "reference",
+        "partner_sample_id": 63,
+        "generation_run_id": "test:run:010",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 65,
+        "cache_record_id": "test:65",
+        "branch_id": "target",
+        "partner_sample_id": 66,
+        "generation_run_id": "test:run:011",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 66,
+        "cache_record_id": "test:66",
+        "branch_id": "reference",
+        "partner_sample_id": 65,
+        "generation_run_id": "test:run:011",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 67,
+        "cache_record_id": "test:67",
+        "branch_id": "target",
+        "partner_sample_id": 68,
+        "generation_run_id": "test:run:012",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 68,
+        "cache_record_id": "test:68",
+        "branch_id": "reference",
+        "partner_sample_id": 67,
+        "generation_run_id": "test:run:012",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 69,
+        "cache_record_id": "test:69",
+        "branch_id": "target",
+        "partner_sample_id": 70,
+        "generation_run_id": "test:run:013",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 70,
+        "cache_record_id": "test:70",
+        "branch_id": "reference",
+        "partner_sample_id": 69,
+        "generation_run_id": "test:run:013",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 71,
+        "cache_record_id": "test:71",
+        "branch_id": "target",
+        "partner_sample_id": 72,
+        "generation_run_id": "test:run:014",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 72,
+        "cache_record_id": "test:72",
+        "branch_id": "reference",
+        "partner_sample_id": 71,
+        "generation_run_id": "test:run:014",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 73,
+        "cache_record_id": "test:73",
+        "branch_id": "target",
+        "partner_sample_id": 74,
+        "generation_run_id": "test:run:015",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 74,
+        "cache_record_id": "test:74",
+        "branch_id": "reference",
+        "partner_sample_id": 73,
+        "generation_run_id": "test:run:015",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 75,
+        "cache_record_id": "test:75",
+        "branch_id": "target",
+        "partner_sample_id": 76,
+        "generation_run_id": "test:run:016",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 76,
+        "cache_record_id": "test:76",
+        "branch_id": "reference",
+        "partner_sample_id": 75,
+        "generation_run_id": "test:run:016",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 77,
+        "cache_record_id": "test:77",
+        "branch_id": "target",
+        "partner_sample_id": 78,
+        "generation_run_id": "test:run:017",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 78,
+        "cache_record_id": "test:78",
+        "branch_id": "reference",
+        "partner_sample_id": 77,
+        "generation_run_id": "test:run:017",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 79,
+        "cache_record_id": "test:79",
+        "branch_id": "target",
+        "partner_sample_id": 80,
+        "generation_run_id": "test:run:018",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 80,
+        "cache_record_id": "test:80",
+        "branch_id": "reference",
+        "partner_sample_id": 79,
+        "generation_run_id": "test:run:018",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 81,
+        "cache_record_id": "test:81",
+        "branch_id": "target",
+        "partner_sample_id": 82,
+        "generation_run_id": "test:run:019",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 82,
+        "cache_record_id": "test:82",
+        "branch_id": "reference",
+        "partner_sample_id": 81,
+        "generation_run_id": "test:run:019",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 83,
+        "cache_record_id": "test:83",
+        "branch_id": "target",
+        "partner_sample_id": 84,
+        "generation_run_id": "test:run:020",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 84,
+        "cache_record_id": "test:84",
+        "branch_id": "reference",
+        "partner_sample_id": 83,
+        "generation_run_id": "test:run:020",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 85,
+        "cache_record_id": "test:85",
+        "branch_id": "target",
+        "partner_sample_id": 86,
+        "generation_run_id": "test:run:021",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 86,
+        "cache_record_id": "test:86",
+        "branch_id": "reference",
+        "partner_sample_id": 85,
+        "generation_run_id": "test:run:021",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 87,
+        "cache_record_id": "test:87",
+        "branch_id": "target",
+        "partner_sample_id": 88,
+        "generation_run_id": "test:run:022",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 88,
+        "cache_record_id": "test:88",
+        "branch_id": "reference",
+        "partner_sample_id": 87,
+        "generation_run_id": "test:run:022",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 89,
+        "cache_record_id": "test:89",
+        "branch_id": "target",
+        "partner_sample_id": 90,
+        "generation_run_id": "test:run:023",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 90,
+        "cache_record_id": "test:90",
+        "branch_id": "reference",
+        "partner_sample_id": 89,
+        "generation_run_id": "test:run:023",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      },
+      {
+        "split": "test",
+        "sample_id": 91,
+        "cache_record_id": "test:91",
+        "branch_id": "target",
+        "partner_sample_id": 91,
+        "generation_run_id": "test:run:024",
+        "state_file_sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5"
+      }
+    ],
+    "twin_equivalence_audit": {
+      "a_swap": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "b_swap": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "aa_same_input": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "a_partner_independence_branch_a": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "a_partner_independence_branch_b": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "repeat_branch_a": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "repeat_branch_b": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "cache_a": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "cache_b": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      }
+    },
+    "splits": {
+      "train": {
+        "state_file": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi_mom_train45_noval_20260807\\states_twin\\state_cache_train.mat",
+        "sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add",
+        "shape": [
+          45,
+          50
+        ],
+        "first_target_date": "2018-09",
+        "last_target_date": "2022-05",
+        "cache_reuse_declared": true,
+        "semantic_pairs_simulated_simultaneously": false
+      },
+      "test": {
+        "state_file": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi_mom_train45_noval_20260807\\states_twin\\state_cache_test.mat",
+        "sha256": "99f6e7ce2bccf6321093260f5b27e9252a368a2402cd469c463acb38aee224a5",
+        "shape": [
+          47,
+          50
+        ],
+        "first_target_date": "2022-06",
+        "last_target_date": "2026-04",
+        "cache_reuse_declared": true,
+        "semantic_pairs_simulated_simultaneously": false
+      }
+    }
+  },
+  "per_seed_test_metrics": [
+    {
+      "seed": 42,
+      "mae": 0.33306055233516507,
+      "rmse": 0.45602200383748676
+    },
+    {
+      "seed": 52,
+      "mae": 0.31988682069993957,
+      "rmse": 0.4333506016915448
+    },
+    {
+      "seed": 62,
+      "mae": 0.3589420162363256,
+      "rmse": 0.4786266212768635
+    }
+  ],
+  "ensemble_test_metrics": {
+    "mae": 0.32929635398988316,
+    "rmse": 0.4479245264412996
+  },
+  "single_optical_reservoir_test_metrics": {
+    "mae": 0.3064237489278527,
+    "rmse": 0.4129135258280719
+  }
+}

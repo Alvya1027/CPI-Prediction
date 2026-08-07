@@ -1,0 +1,92 @@
+{
+  "experiment": "teacher-style PyTorch Siamese on YoY optical states",
+  "created_at": "2026-08-07T18:59:11.948054+08:00",
+  "source": "cpi_data_lastyear=100.csv actual sequence",
+  "split_protocol": "train 2018-09..2022-05 (45), test 2022-06..2026-04 (47), no validation",
+  "architecture": "fixed 50D optical states -> shared Linear-ReLU-BatchNorm-Linear-ReLU-Linear backbone -> 32D embedding difference -> Linear-ReLU-Linear regression head",
+  "configuration": {
+    "input_dim": 50,
+    "hidden_dim": 64,
+    "embedding_dim": 32,
+    "head_hidden_dim": 32,
+    "batch_size": 64,
+    "epochs": 50,
+    "learning_rate": 0.001,
+    "min_gap_months": 1,
+    "k_references": 5,
+    "aggregation": "mean",
+    "seeds": [
+      42,
+      52,
+      62
+    ]
+  },
+  "configuration_policy": "architecture, optimizer and epochs adapted directly from the teacher example; three seeds declared as a fixed mean ensemble; no seed or hyperparameter selected from test metrics",
+  "training_targets": 45,
+  "derived_training_pairs": 561,
+  "derived_pair_target_months": 33,
+  "test_targets": 47,
+  "test_references_per_target": 5,
+  "all_test_references_from_train45": true,
+  "test_labels_used_for_reference_selection": false,
+  "reservoir_parameters_trained": false,
+  "pytorch_backbone_and_regression_head_trained": true,
+  "state_standardization_fit_on_train45_only": true,
+  "state_audit": {
+    "status": "passed",
+    "state_protocol": "continuous_serial_shared_fixed_reservoir",
+    "state_width": 50,
+    "shared_fixed_mask": true,
+    "loaded_splits": [
+      "train",
+      "test"
+    ],
+    "splits": {
+      "train": {
+        "state_file": "matlab\\optical_reservoir_cpi_yoy_train45_noval_20260807\\states\\states_train.mat",
+        "sha256": "865ba7488932cb3f68107a51f2ce9f0ecaf26d8c4aebd316bcf838f5b5e6e3d1",
+        "shape": [
+          45,
+          50
+        ],
+        "first_target_date": "2018-09",
+        "last_target_date": "2022-05"
+      },
+      "test": {
+        "state_file": "matlab\\optical_reservoir_cpi_yoy_train45_noval_20260807\\states\\states_test.mat",
+        "sha256": "7d934153e164827fdb86a57bee5093b8f2235f194f8aa8f97e767cf8f9230f81",
+        "shape": [
+          47,
+          50
+        ],
+        "first_target_date": "2022-06",
+        "last_target_date": "2026-04"
+      }
+    }
+  },
+  "per_seed_test_metrics": [
+    {
+      "seed": 42,
+      "mae": 0.7975872121909835,
+      "rmse": 0.9475753119616384
+    },
+    {
+      "seed": 52,
+      "mae": 0.6499141036243515,
+      "rmse": 0.7787685642718
+    },
+    {
+      "seed": 62,
+      "mae": 0.6024262664578068,
+      "rmse": 0.7176925268623541
+    }
+  ],
+  "ensemble_test_metrics": {
+    "mae": 0.6650114122313175,
+    "rmse": 0.7916591464568329
+  },
+  "single_optical_reservoir_test_metrics": {
+    "mae": 0.6297753059490571,
+    "rmse": 0.7095125226892769
+  }
+}

@@ -1,0 +1,3 @@
+model,display_name,test_mae,test_rmse,mae_change_vs_single_pct,rmse_change_vs_single_pct
+single_optical_reservoir_same_states,Single optical reservoir,0.3064237489278527,0.4129135258280719,0.0,0.0
+teacher_pytorch_siamese_three_seed_mean,Teacher PyTorch Siamese,0.32929635398988316,0.4479245264412996,7.464370872707993,8.479015198888273
