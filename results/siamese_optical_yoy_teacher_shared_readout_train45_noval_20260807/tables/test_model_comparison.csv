@@ -1,0 +1,4 @@
+model,display_name,test_mae,test_rmse,mae_change_vs_single_pct,rmse_change_vs_single_pct
+single_optical_reservoir,Single optical reservoir,0.6297753059490571,0.7095125226892769,0.0,0.0
+joint_shared_readout_direct_diagnostic,Joint readout (direct),1.4641551401152102,1.6011934075694594,132.48849649777262,125.67514404121157
+siamese_shared_readout_pair,Shared-readout Siamese,1.22709034226614,1.512412557259163,94.84573794409783,113.16220769813069

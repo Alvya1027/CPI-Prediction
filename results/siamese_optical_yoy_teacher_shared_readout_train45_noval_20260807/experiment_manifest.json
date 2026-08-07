@@ -1,0 +1,74 @@
+{
+  "experiment": "YoY shared-readout Siamese train45/test47 no validation",
+  "created_at": "2026-08-07T18:46:03.049908+08:00",
+  "source": "data_processed/cpi_data_lastyear=100.csv actual sequence",
+  "target_scale": "CPI YoY index (previous-year same month=100)",
+  "window_protocol": "continuous previous 12 actual YoY values; one-step ahead",
+  "split_protocol": "train 2018-09..2022-05 (45), test 2022-06..2026-04 (47), no validation",
+  "state_protocol": "continuous_serial_shared_fixed_reservoir",
+  "architecture_scope": "semantic target/reference branches resolved from one fixed-reservoir unique-window state cache; not simultaneous explicit-Twin MATLAB simulation",
+  "configuration": {
+    "alpha": 100.0,
+    "pair_weight": 0.1,
+    "k_references": 5,
+    "aggregation": "mean",
+    "min_gap_months": 1,
+    "absolute_alpha": 2.2222222222222223
+  },
+  "configuration_policy": "copied from the predeclared MoM train45/test47 protocol before this YoY run; no YoY test metric used for selection",
+  "training_targets": 45,
+  "derived_training_pairs": 561,
+  "test_targets": 47,
+  "test_references_per_target": 5,
+  "all_test_references_from_train45": true,
+  "test_labels_used_for_reference_selection": false,
+  "reservoir_parameters_trained": false,
+  "only_shared_output_weights_trained": true,
+  "state_audit": {
+    "status": "passed",
+    "state_protocol": "continuous_serial_shared_fixed_reservoir",
+    "state_width": 50,
+    "shared_fixed_mask": true,
+    "loaded_splits": [
+      "train",
+      "test"
+    ],
+    "splits": {
+      "train": {
+        "state_file": "matlab\\optical_reservoir_cpi_yoy_train45_noval_20260807\\states\\states_train.mat",
+        "sha256": "865ba7488932cb3f68107a51f2ce9f0ecaf26d8c4aebd316bcf838f5b5e6e3d1",
+        "shape": [
+          45,
+          50
+        ],
+        "first_target_date": "2018-09",
+        "last_target_date": "2022-05"
+      },
+      "test": {
+        "state_file": "matlab\\optical_reservoir_cpi_yoy_train45_noval_20260807\\states\\states_test.mat",
+        "sha256": "7d934153e164827fdb86a57bee5093b8f2235f194f8aa8f97e767cf8f9230f81",
+        "shape": [
+          47,
+          50
+        ],
+        "first_target_date": "2022-06",
+        "last_target_date": "2026-04"
+      }
+    }
+  },
+  "data_manifest_sha256": "5838b0fe7d9ba07fd5bff59469120c97f103b95b6cd30e026c234262204c426e",
+  "test_metrics": {
+    "single_optical_reservoir": {
+      "mae": 0.6297753059490571,
+      "rmse": 0.7095125226892769
+    },
+    "joint_shared_readout_direct_diagnostic": {
+      "mae": 1.4641551401152102,
+      "rmse": 1.6011934075694594
+    },
+    "siamese_shared_readout_pair": {
+      "mae": 1.22709034226614,
+      "rmse": 1.512412557259163
+    }
+  }
+}
