@@ -1,0 +1,4 @@
+# Generated experiment JSON files participate in SHA-256 audit chains.
+# Preserve their exact bytes across Windows and Git checkouts.
+matlab/optical_reservoir_cpi_mom_*/**/*.json -text
+results/siamese_optical_mom_teacher_*/**/*.json -text

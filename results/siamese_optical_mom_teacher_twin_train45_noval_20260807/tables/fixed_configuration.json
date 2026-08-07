@@ -1,0 +1,524 @@
+{
+  "schema_version": "1.0",
+  "reporting_status": "teacher_explicit_twin_train45_no_validation_frozen",
+  "status": "train_only_fixed_not_tested",
+  "created_at": "2026-08-07T15:34:58.047020+08:00",
+  "experiment": "teacher explicit Twin train45/test47 without validation split",
+  "state_protocol": "explicit_twin_audited_unique_window_cache_v1",
+  "split_protocol": "train45_no_validation_test47_20260807",
+  "configuration": {
+    "alpha": 100.0,
+    "pair_weight": 0.1,
+    "k_references": 5,
+    "aggregation": "mean",
+    "min_gap_months": 1,
+    "absolute_alpha": 2.0
+  },
+  "configuration_policy": "predeclared constants; no test data, test state, or test metric selected them",
+  "training_targets": 45,
+  "training_target_range": [
+    "2018-09",
+    "2022-05"
+  ],
+  "validation_targets": 0,
+  "test_targets_declared": 47,
+  "test_target_range": [
+    "2022-06",
+    "2026-04"
+  ],
+  "derived_train_pair_relations": 561,
+  "derived_train_pair_target_months": 33,
+  "test_data_loaded": false,
+  "test_state_loaded": false,
+  "test_evaluated": false,
+  "reservoir_parameters_trained": false,
+  "only_output_weights_trained": true,
+  "train_state_audit": {
+    "status": "passed",
+    "state_protocol": "explicit_twin_audited_unique_window_cache_v1",
+    "protocol_identity_sha256": "2a03a8000c12ef1216dbbdcf25e69eb9952a89e62961cd99f3409baf8bccb592",
+    "state_width": 50,
+    "loaded_splits": [
+      "train"
+    ],
+    "cache_reuse_declared": true,
+    "cache_generated_by_explicit_twin_model": true,
+    "semantic_pairs_simulated_simultaneously": false,
+    "pair_states_resolved_by_sample_id": true,
+    "only_output_weights_trainable_downstream": true,
+    "shared_branch_model_sha256": "1af85380443fe75cbe2adbb2a0b325e0bce3e5c28e418edae6c3be1a080a9b04",
+    "twin_model_sha256": "617196c2c038606b688cbf4debce73d67354d284f81a55c6c6891ebfbc17a1d9",
+    "simulation_protocol_sha256": "afb3c2331dd900ac4f75d9d2412c8ce1bcf2dc15aaec75fc903c6c7c64a77a8b",
+    "audit_mat_sha256": "803887ccc703ac6ba73c5103bb52cf306e45f778eb3812db3575c6ed6e6d5e72",
+    "audit_json_sha256": "765485db27ea009151ef6ebfde2a19f4a6212d9eaaade3439c883425e4aa9112",
+    "cache_records": [
+      {
+        "split": "train",
+        "sample_id": 0,
+        "cache_record_id": "train:0",
+        "branch_id": "target",
+        "partner_sample_id": 1,
+        "generation_run_id": "train:run:001",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 1,
+        "cache_record_id": "train:1",
+        "branch_id": "reference",
+        "partner_sample_id": 0,
+        "generation_run_id": "train:run:001",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 2,
+        "cache_record_id": "train:2",
+        "branch_id": "target",
+        "partner_sample_id": 3,
+        "generation_run_id": "train:run:002",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 3,
+        "cache_record_id": "train:3",
+        "branch_id": "reference",
+        "partner_sample_id": 2,
+        "generation_run_id": "train:run:002",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 4,
+        "cache_record_id": "train:4",
+        "branch_id": "target",
+        "partner_sample_id": 5,
+        "generation_run_id": "train:run:003",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 5,
+        "cache_record_id": "train:5",
+        "branch_id": "reference",
+        "partner_sample_id": 4,
+        "generation_run_id": "train:run:003",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 6,
+        "cache_record_id": "train:6",
+        "branch_id": "target",
+        "partner_sample_id": 7,
+        "generation_run_id": "train:run:004",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 7,
+        "cache_record_id": "train:7",
+        "branch_id": "reference",
+        "partner_sample_id": 6,
+        "generation_run_id": "train:run:004",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 8,
+        "cache_record_id": "train:8",
+        "branch_id": "target",
+        "partner_sample_id": 9,
+        "generation_run_id": "train:run:005",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 9,
+        "cache_record_id": "train:9",
+        "branch_id": "reference",
+        "partner_sample_id": 8,
+        "generation_run_id": "train:run:005",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 10,
+        "cache_record_id": "train:10",
+        "branch_id": "target",
+        "partner_sample_id": 11,
+        "generation_run_id": "train:run:006",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 11,
+        "cache_record_id": "train:11",
+        "branch_id": "reference",
+        "partner_sample_id": 10,
+        "generation_run_id": "train:run:006",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 12,
+        "cache_record_id": "train:12",
+        "branch_id": "target",
+        "partner_sample_id": 13,
+        "generation_run_id": "train:run:007",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 13,
+        "cache_record_id": "train:13",
+        "branch_id": "reference",
+        "partner_sample_id": 12,
+        "generation_run_id": "train:run:007",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 14,
+        "cache_record_id": "train:14",
+        "branch_id": "target",
+        "partner_sample_id": 15,
+        "generation_run_id": "train:run:008",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 15,
+        "cache_record_id": "train:15",
+        "branch_id": "reference",
+        "partner_sample_id": 14,
+        "generation_run_id": "train:run:008",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 16,
+        "cache_record_id": "train:16",
+        "branch_id": "target",
+        "partner_sample_id": 17,
+        "generation_run_id": "train:run:009",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 17,
+        "cache_record_id": "train:17",
+        "branch_id": "reference",
+        "partner_sample_id": 16,
+        "generation_run_id": "train:run:009",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 18,
+        "cache_record_id": "train:18",
+        "branch_id": "target",
+        "partner_sample_id": 19,
+        "generation_run_id": "train:run:010",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 19,
+        "cache_record_id": "train:19",
+        "branch_id": "reference",
+        "partner_sample_id": 18,
+        "generation_run_id": "train:run:010",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 20,
+        "cache_record_id": "train:20",
+        "branch_id": "target",
+        "partner_sample_id": 21,
+        "generation_run_id": "train:run:011",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 21,
+        "cache_record_id": "train:21",
+        "branch_id": "reference",
+        "partner_sample_id": 20,
+        "generation_run_id": "train:run:011",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 22,
+        "cache_record_id": "train:22",
+        "branch_id": "target",
+        "partner_sample_id": 23,
+        "generation_run_id": "train:run:012",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 23,
+        "cache_record_id": "train:23",
+        "branch_id": "reference",
+        "partner_sample_id": 22,
+        "generation_run_id": "train:run:012",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 24,
+        "cache_record_id": "train:24",
+        "branch_id": "target",
+        "partner_sample_id": 25,
+        "generation_run_id": "train:run:013",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 25,
+        "cache_record_id": "train:25",
+        "branch_id": "reference",
+        "partner_sample_id": 24,
+        "generation_run_id": "train:run:013",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 26,
+        "cache_record_id": "train:26",
+        "branch_id": "target",
+        "partner_sample_id": 27,
+        "generation_run_id": "train:run:014",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 27,
+        "cache_record_id": "train:27",
+        "branch_id": "reference",
+        "partner_sample_id": 26,
+        "generation_run_id": "train:run:014",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 28,
+        "cache_record_id": "train:28",
+        "branch_id": "target",
+        "partner_sample_id": 29,
+        "generation_run_id": "train:run:015",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 29,
+        "cache_record_id": "train:29",
+        "branch_id": "reference",
+        "partner_sample_id": 28,
+        "generation_run_id": "train:run:015",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 30,
+        "cache_record_id": "train:30",
+        "branch_id": "target",
+        "partner_sample_id": 31,
+        "generation_run_id": "train:run:016",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 31,
+        "cache_record_id": "train:31",
+        "branch_id": "reference",
+        "partner_sample_id": 30,
+        "generation_run_id": "train:run:016",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 32,
+        "cache_record_id": "train:32",
+        "branch_id": "target",
+        "partner_sample_id": 33,
+        "generation_run_id": "train:run:017",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 33,
+        "cache_record_id": "train:33",
+        "branch_id": "reference",
+        "partner_sample_id": 32,
+        "generation_run_id": "train:run:017",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 34,
+        "cache_record_id": "train:34",
+        "branch_id": "target",
+        "partner_sample_id": 35,
+        "generation_run_id": "train:run:018",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 35,
+        "cache_record_id": "train:35",
+        "branch_id": "reference",
+        "partner_sample_id": 34,
+        "generation_run_id": "train:run:018",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 36,
+        "cache_record_id": "train:36",
+        "branch_id": "target",
+        "partner_sample_id": 37,
+        "generation_run_id": "train:run:019",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 37,
+        "cache_record_id": "train:37",
+        "branch_id": "reference",
+        "partner_sample_id": 36,
+        "generation_run_id": "train:run:019",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 38,
+        "cache_record_id": "train:38",
+        "branch_id": "target",
+        "partner_sample_id": 39,
+        "generation_run_id": "train:run:020",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 39,
+        "cache_record_id": "train:39",
+        "branch_id": "reference",
+        "partner_sample_id": 38,
+        "generation_run_id": "train:run:020",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 40,
+        "cache_record_id": "train:40",
+        "branch_id": "target",
+        "partner_sample_id": 41,
+        "generation_run_id": "train:run:021",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 41,
+        "cache_record_id": "train:41",
+        "branch_id": "reference",
+        "partner_sample_id": 40,
+        "generation_run_id": "train:run:021",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 42,
+        "cache_record_id": "train:42",
+        "branch_id": "target",
+        "partner_sample_id": 43,
+        "generation_run_id": "train:run:022",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 43,
+        "cache_record_id": "train:43",
+        "branch_id": "reference",
+        "partner_sample_id": 42,
+        "generation_run_id": "train:run:022",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      },
+      {
+        "split": "train",
+        "sample_id": 44,
+        "cache_record_id": "train:44",
+        "branch_id": "target",
+        "partner_sample_id": 44,
+        "generation_run_id": "train:run:023",
+        "state_file_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add"
+      }
+    ],
+    "twin_equivalence_audit": {
+      "a_swap": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "b_swap": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "aa_same_input": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "a_partner_independence_branch_a": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "a_partner_independence_branch_b": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "repeat_branch_a": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "repeat_branch_b": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "cache_a": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      },
+      "cache_b": {
+        "max_abs": 0.0,
+        "max_rel": 0.0,
+        "passed": true
+      }
+    },
+    "splits": {
+      "train": {
+        "state_file": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi_mom_train45_noval_20260807\\states_twin\\state_cache_train.mat",
+        "sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add",
+        "shape": [
+          45,
+          50
+        ],
+        "first_target_date": "2018-09",
+        "last_target_date": "2022-05",
+        "cache_reuse_declared": true,
+        "semantic_pairs_simulated_simultaneously": false
+      }
+    }
+  },
+  "data_manifest_sha256": "0395328b59e7a9b91f08a442758ed99374d24c853ecfa65ccce67c4e81cf551a"
+}

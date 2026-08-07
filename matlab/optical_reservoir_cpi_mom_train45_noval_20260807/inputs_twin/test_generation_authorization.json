@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "status": "train_only_fixed_authorized_for_test_state_generation",
+  "created_at": "2026-08-07T15:34:58.051535+08:00",
+  "allowed_split": "test",
+  "state_protocol": "explicit_twin_audited_unique_window_cache_v1",
+  "split_protocol": "train45_no_validation_test47_20260807",
+  "protocol_identity_sha256": "2a03a8000c12ef1216dbbdcf25e69eb9952a89e62961cd99f3409baf8bccb592",
+  "frozen_config_path": "C:\\Users\\28438\\Documents\\GitHub\\CPI-Prediction\\results\\siamese_optical_mom_teacher_twin_train45_noval_20260807\\tables\\fixed_configuration.json",
+  "frozen_config_sha256": "ae15962635c4e2279c5093342c6011de3cfd6e574a730e9b4ab39bca66b4d728",
+  "train_state_sha256": "0a9cc18afa66e794ac776939eb37b784c029bbfb36db8c55425e4f45995d9add",
+  "audit_mat_sha256": "803887ccc703ac6ba73c5103bb52cf306e45f778eb3812db3575c6ed6e6d5e72",
+  "audit_json_sha256": "765485db27ea009151ef6ebfde2a19f4a6212d9eaaade3439c883425e4aa9112",
+  "shared_branch_model_sha256": "1af85380443fe75cbe2adbb2a0b325e0bce3e5c28e418edae6c3be1a080a9b04",
+  "twin_model_sha256": "617196c2c038606b688cbf4debce73d67354d284f81a55c6c6891ebfbc17a1d9",
+  "simulation_protocol_sha256": "afb3c2331dd900ac4f75d9d2412c8ce1bcf2dc15aaec75fc903c6c7c64a77a8b",
+  "data_manifest_sha256": "0395328b59e7a9b91f08a442758ed99374d24c853ecfa65ccce67c4e81cf551a",
+  "frozen_configuration": {
+    "alpha": 100.0,
+    "pair_weight": 0.1,
+    "k_references": 5,
+    "aggregation": "mean",
+    "min_gap_months": 1,
+    "absolute_alpha": 2.0
+  },
+  "validation_split_used": false,
+  "test_labels_accessed": false,
+  "test_state_generated": false
+}
