@@ -1,0 +1,3 @@
+model,split,num_targets,mae,rmse
+single_optical_reservoir,train,45,0.44555731680096483,0.571500325598025
+single_optical_reservoir,test,47,0.6297753059490571,0.7095125226892769

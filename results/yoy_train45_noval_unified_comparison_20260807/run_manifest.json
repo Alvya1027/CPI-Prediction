@@ -1,0 +1,16 @@
+{
+  "experiment": "unified YoY train45/test47 comparison",
+  "source": "cpi_data_lastyear=100.csv actual sequence",
+  "window_protocol": "continuous previous 12 actual values; one-step-ahead target",
+  "split_protocol": "train 2018-09..2022-05 (45), test 2022-06..2026-04 (47), no validation",
+  "models": [
+    "Naive（上期值）",
+    "线性回归",
+    "单网络光储备池",
+    "随机森林",
+    "梯度提升树",
+    "Ridge回归",
+    "SVR（RBF）"
+  ],
+  "test_used_for_selection": false
+}

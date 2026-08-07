@@ -1,0 +1,37 @@
+{
+  "purpose": "user YoY continuous-window train/test isolation without validation",
+  "source_files": {
+    "cpi_data_lastyear=100.csv": "297bf82020011b6549dfcef64e1d4173f2f1f4f6b9c20421ab04189c993d4576"
+  },
+  "splits": {
+    "train": {
+      "num_samples": 45,
+      "first_target_date": "2018-09",
+      "last_target_date": "2022-05",
+      "X_shape": [
+        45,
+        12
+      ]
+    },
+    "test": {
+      "num_samples": 47,
+      "first_target_date": "2022-06",
+      "last_target_date": "2026-04",
+      "X_shape": [
+        47,
+        12
+      ]
+    }
+  },
+  "outputs": {
+    "sample_index_train.csv": "1f1d08ecb21a8066742869976b86d7f4f186510b51a304f777a8b1c20ad3dadb",
+    "X_train.npy": "b06a22d6c167343af63f5a55b9dc6c1edb3863c10f40ed0bcf81b287e5f4e92b",
+    "y_train.npy": "6f5abe1435a33568df36d7d7dc97b90117f4032ba9cc59ef7f23d205f3a920ba",
+    "cpi_train_isolated.mat": "c2d77abf1173005e1b572598163e799848e3379762ba4c0732c68e5c4ffba1a7",
+    "sample_index_test.csv": "b6b86188fbe6fe41a2d4a0b1c1e1f457a177b8959e97dec9d1ba0410d8da93b5",
+    "X_test.npy": "169651dcec31b845ca2a611262864a6c3f2b90c64a3e87a4f8d4d49413058418",
+    "y_test.npy": "958be0b7e440e4ceb7d69676de9e8c5fb16a6318a11e49ea07813c0a1b2212c5",
+    "cpi_test_isolated.mat": "09b8e8cd362bb992e38e0fe82d2c9dd021342e2fe66bca219934f6f372b03d9c"
+  },
+  "combined_mat_sha256": "0e3a88b31cdf7b791dd9dc23be551adb04a089497d7c1ecfe46482fa724ec592"
+}

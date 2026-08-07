@@ -1,0 +1,11 @@
+{
+  "experiment": "single_optical_reservoir_yoy_train45_noval",
+  "created_at": "2026-08-07T15:41:40.868563+08:00",
+  "source": "data_processed/cpi_data_lastyear=100.csv actual sequence",
+  "window_protocol": "continuous previous 12 actual YoY values; one-step-ahead target",
+  "split_protocol": "train 2018-09..2022-05 (45), test 2022-06..2026-04 (47), no validation",
+  "alpha_selection": "5-fold chronological TimeSeriesSplit on train45 only",
+  "selected_alpha": 100.0,
+  "state_dir": "D:\\个人\\GitHub\\CPI-Prediction\\matlab\\optical_reservoir_cpi_yoy_train45_noval_20260807\\states",
+  "output_dir": "D:\\个人\\GitHub\\CPI-Prediction\\results\\optical_reservoir_yoy_train45_noval_20260807"
+}
