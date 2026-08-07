@@ -76,6 +76,12 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _write_json(path: Path, payload: object) -> None:
+    """Write audited JSON with stable UTF-8/LF bytes on every platform."""
+    serialized = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+    path.write_bytes(serialized.encode("utf-8"))
+
+
 def _load_expected_split(data_dir: Path, split: str) -> dict[str, object]:
     payload = load_isolated_split(data_dir, split)
     expected = {
@@ -191,12 +197,8 @@ def freeze_train_only(
         "data_manifest_sha256": _sha256(data_dir / "isolated_split_manifest.json"),
     }
     frozen_path = table_dir / "fixed_configuration.json"
-    frozen_path.write_text(
-        json.dumps(frozen, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
-    (output_dir / "experiment_manifest.json").write_text(
-        json.dumps(frozen, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    _write_json(frozen_path, frozen)
+    _write_json(output_dir / "experiment_manifest.json", frozen)
     return frozen_path
 
 
@@ -250,10 +252,7 @@ def write_test_authorization(
         "test_state_generated": False,
     }
     authorization_path.parent.mkdir(parents=True, exist_ok=True)
-    authorization_path.write_text(
-        json.dumps(authorization, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    _write_json(authorization_path, authorization)
     return authorization_path
 
 
@@ -432,12 +431,8 @@ def evaluate_frozen_test(
         "all_test_references_from_train45": True,
         "test_labels_used_for_reference_selection": False,
     }
-    completion_path.write_text(
-        json.dumps(completion, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
-    (output_dir / "experiment_manifest.json").write_text(
-        json.dumps(completion, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    _write_json(completion_path, completion)
+    _write_json(output_dir / "experiment_manifest.json", completion)
     return comparison
 
 
